@@ -1,0 +1,69 @@
+<?jelly escape-by-default='true'?>
+<j:jelly xmlns:j="jelly:core" xmlns:st="jelly:stapler" xmlns:d="jelly:define" xmlns:l="/lib/layout"
+         xmlns:t="/lib/hudson" xmlns:f="/lib/form">
+    <st:adjunct includes="org.kohsuke.stapler.jquery"/>
+    <!-- avoid conflict with prototype.js in core -->
+    <script>var Q = jQuery.noConflict()</script>
+    <script src="${rootURL}/plugin/acunetix-360-scan/scripts/arrive.js"/>
+    <j:set var="editorId" value="${descriptor.createEditorId()}"/>
+    <j:set var="ncResourceURL" value="${resURL}"/>
+
+    <f:section title="Scan Settings">
+        <f:entry title="Scan Type" field="ncScanType" help="/plugin/acunetix-360-scan/help-ncscantype.html">
+            <f:select field="ncScanType" default="" id="ncScanType-${editorId}">
+            </f:select>
+        </f:entry>
+
+        <f:entry title="Website Deploy URL" help="/plugin/acunetix-360-scan/help-ncwebsiteid.html">
+            <f:select field="ncWebsiteId" default="" id="ncWebsiteId-${editorId}"/>
+        </f:entry>
+
+        <f:entry title="Profile Name" help="/plugin/acunetix-360-scan/help-ncprofileid.html">
+            <f:select field="ncProfileId" default="" id="ncProfileId-${editorId}"/>
+        </f:entry>
+
+        <script type="text/javascript">
+            (function () {
+                Q('#ncScanType-${editorId}').change(function () {
+                    var ncScanType = Q('#ncScanType-${editorId}');
+                    var scanTypeValue = ncScanType.val();
+                    var ncProfileIdRow = Q('#ncProfileId-${editorId}').closest("tr");
+
+                    if (scanTypeValue == "FullWithPrimaryProfile") {
+                        ncProfileIdRow.hide();
+                        ncProfileIdRow.next().hide();
+                        ncProfileIdRow.next().next().hide();//help-text container
+                    } else {
+                        ncProfileIdRow.show();
+                        ncProfileIdRow.next().show();
+                        ncProfileIdRow.next().next().show();//help-text container
+                    }
+                })
+                Q('#ncScanType-${editorId}').change();
+            })();
+
+            //function will be triggered when #ncScanType-${editorId} element created first time inside .jenkins-config
+            //Previous function will be used later requests.
+            Q(".jenkins-config").arrive("#ncScanType-${editorId}", function () {
+                // 'this' refers to the newly created element
+                Q('#ncScanType-${editorId}').change(function () {
+                    var ncScanType = Q('#ncScanType-${editorId}');
+                    var scanTypeValue = ncScanType.val();
+                    var ncProfileIdRow = Q('#ncProfileId-${editorId}').closest("tr");
+
+                    if (scanTypeValue == "FullWithPrimaryProfile") {
+                        ncProfileIdRow.hide();
+                        ncProfileIdRow.next().hide();
+                        ncProfileIdRow.next().next().hide();//help-text container
+                    } else {
+                        ncProfileIdRow.show();
+                        ncProfileIdRow.next().show();
+                        ncProfileIdRow.next().next().show();//help-text container
+                    }
+                });
+                Q('#ncScanType-${editorId}').change();
+                Q(".jenkins-config").unbindArrive("#ncScanType-${editorId}");
+            });
+        </script>
+    </f:section>
+</j:jelly>

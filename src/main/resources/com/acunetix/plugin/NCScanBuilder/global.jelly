@@ -1,0 +1,23 @@
+<?jelly escape-by-default='true'?>
+<j:jelly xmlns:j="jelly:core" xmlns:st="jelly:stapler" xmlns:d="jelly:define"
+         xmlns:l="/lib/layout" xmlns:t="/lib/hudson" xmlns:f="/lib/form">
+    <st:adjunct includes="org.kohsuke.stapler.jquery"/>
+    <!-- avoid conflict with prototype.js in core -->
+    <script>var Q = jQuery.noConflict()</script>
+    <f:section title="Acunetix">
+        <f:entry title="Acunetix 360 Server URL" field="ncServerURL" help="/plugin/acunetix-360-scan/help-ncserverurl.html">
+            <f:textbox/>
+        </f:entry>
+        <f:entry title="API Token" field="ncApiToken" help="/plugin/acunetix-360-scan/help-ncapitoken.html">
+            <f:password checkMethod="post"/>
+        </f:entry>
+        <f:validateButton
+                title="Test Connection" progress="Testing..."
+                method="validateAPI" with="ncServerURL,ncApiToken"/>
+        <script type="text/javascript">
+            (function () {
+            Q("input[name='_.ncServerURL']").attr('placeholder', "like 'https://www.acunetix360.com'");
+            })();
+        </script>
+    </f:section>
+</j:jelly>
