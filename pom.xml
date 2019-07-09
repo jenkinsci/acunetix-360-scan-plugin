@@ -7,7 +7,7 @@
         <version>2.33</version>
         <relativePath />
     </parent>
-    <groupId>com.acunetix</groupId>
+    <groupId>org.jenkins-ci.plugins</groupId>
     <artifactId>acunetix-360-scan</artifactId>
     <version>1.1-SNAPSHOT</version>
     <packaging>hpi</packaging>
