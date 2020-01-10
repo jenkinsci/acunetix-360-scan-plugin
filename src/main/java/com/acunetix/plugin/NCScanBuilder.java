@@ -233,6 +233,7 @@ public class NCScanBuilder extends Builder implements SimpleBuildStep {
         public ListBoxModel doFillNcScanTypeItems() {
             ListBoxModel model = new ListBoxModel();
             model.add("-- Please select a scan type --", "");
+            model.add("Incremental", "Incremental");
             model.add("Full (With primary profile)", "FullWithPrimaryProfile");
             model.add("Full (With selected profile)", "FullWithSelectedProfile");
 

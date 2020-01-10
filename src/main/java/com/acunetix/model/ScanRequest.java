@@ -28,8 +28,8 @@ public class ScanRequest extends ScanRequestBase {
         this.websiteId = websiteId;
         this.profileId = profileId;
         this.vcsCommit = vcsCommit;
-        scanUri = new URL(ApiURL, "api/v1/IntegrationsApi/CreateFromPluginScanRequest").toURI();
-        testUri = new URL(ApiURL, "api/v1/IntegrationsApi/VerifyPluginScanRequest").toURI();
+        scanUri = new URL(ApiURL, "api/1.0/scans/CreateFromPluginScanRequest").toURI();
+        testUri = new URL(ApiURL, "api/1.0/scans/VerifyPluginScanRequest").toURI();
     }
 
     public final ScanType scanType;
@@ -72,6 +72,11 @@ public class ScanRequest extends ScanRequestBase {
 
     private void setScanParams(List<NameValuePair> params) {
         switch (scanType) {
+            case Incremental:
+                params.add(new BasicNameValuePair("WebsiteId", websiteId));
+                params.add(new BasicNameValuePair("ProfileId", profileId));
+                params.add(new BasicNameValuePair("ScanType", "Incremental"));
+                break;
             case FullWithPrimaryProfile:
                 params.add(new BasicNameValuePair("WebsiteId", websiteId));
                 params.add(new BasicNameValuePair("ScanType", "FullWithPrimaryProfile"));
