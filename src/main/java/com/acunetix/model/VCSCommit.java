@@ -1,6 +1,7 @@
 package com.acunetix.model;
 
 import com.acunetix.utility.AppCommon;
+import com.google.common.base.Strings;
 import hudson.model.Run;
 import hudson.model.User;
 import hudson.scm.ChangeLogSet;
@@ -9,15 +10,25 @@ import jenkins.model.Jenkins;
 import org.apache.http.NameValuePair;
 import org.apache.http.message.BasicNameValuePair;
 
+import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
+import java.util.Properties;
 
 public class VCSCommit {
 
-    public static VCSCommit empty(Run<?, ?> build) {
-        return new VCSCommit(build, null);
-    }
+    private final String ciBuildServerVersion;
+    private final String ciNcPluginVersion;
+    private final String buildId;
+    private final String buildConfigurationName;
+    private final String buildURL;
+    private final boolean buildHasChange;
+    private final String versionControlName;
+    private final String committer;
+    private final String vcsVersion;
+    private final String ciTimestamp;
+    private String rootURL = "";
 
     public VCSCommit(Run<?, ?> build, ChangeLogSet<?> changelog) {
         buildId = String.valueOf(build.number);
@@ -51,27 +62,18 @@ public class VCSCommit {
         } else {
             versionControlName = "";
             ciTimestamp = iso8601DateTimeFormat.format(new Date());
-            vcsVersion="";
+            vcsVersion = "";
             committer = "";
         }
 
         VersionNumber versionNumber = Jenkins.getVersion();
         ciBuildServerVersion = versionNumber != null ? versionNumber.toString() : "Not found.";
-        ciNcPluginVersion = "1.1.4";
+        ciNcPluginVersion = null; //don't add plugin version number
     }
 
-    private final String ciBuildServerVersion;
-    private final String ciNcPluginVersion;
-    private final String buildId;
-    private final String buildConfigurationName;
-    private final String buildURL;
-    private final boolean buildHasChange;
-    private final String versionControlName;
-    private final String committer;
-    private final String vcsVersion;
-    private final String ciTimestamp;
-
-    private String rootURL = "";
+    public static VCSCommit empty(Run<?, ?> build) {
+        return new VCSCommit(build, null);
+    }
 
     public void setRootURL(String rootURL) {
         if (rootURL == null) {

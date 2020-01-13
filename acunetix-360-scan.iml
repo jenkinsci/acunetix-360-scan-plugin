@@ -13,6 +13,7 @@
       <sourceFolder url="file://$MODULE_DIR$/src/main/resources" type="java-resource" />
       <sourceFolder url="file://$MODULE_DIR$/target/generated-sources/localizer" isTestSource="false" generated="true" />
       <sourceFolder url="file://$MODULE_DIR$/target/generated-test-sources/injected" isTestSource="true" generated="true" />
+      <sourceFolder url="file://$MODULE_DIR$/src/main/resources-filtered" type="java-resource" />
       <excludeFolder url="file://$MODULE_DIR$/target" />
     </content>
     <orderEntry type="inheritedJdk" />
@@ -55,6 +56,7 @@
     <orderEntry type="library" scope="TEST" name="Maven: org.jboss.marshalling:jboss-marshalling-river:1.4.9.Final" level="project" />
     <orderEntry type="library" scope="TEST" name="Maven: org.jboss.marshalling:jboss-marshalling:1.4.9.Final" level="project" />
     <orderEntry type="library" name="Maven: org.jenkins-ci.plugins:command-launcher:1.1" level="project" />
+    <orderEntry type="library" name="Maven: xpp3:xpp3:1.1.4c" level="project" />
     <orderEntry type="library" scope="PROVIDED" name="Maven: com.google.code.findbugs:annotations:3.0.0" level="project" />
     <orderEntry type="library" scope="PROVIDED" name="Maven: net.jcip:jcip-annotations:1.0" level="project" />
     <orderEntry type="library" scope="PROVIDED" name="Maven: org.codehaus.mojo:animal-sniffer-annotations:1.14" level="project" />
@@ -115,7 +117,6 @@
     <orderEntry type="library" scope="PROVIDED" name="Maven: org.jvnet.localizer:localizer:1.26" level="project" />
     <orderEntry type="library" scope="PROVIDED" name="Maven: antlr:antlr:2.7.6" level="project" />
     <orderEntry type="library" scope="PROVIDED" name="Maven: org.jvnet.hudson:xstream:1.4.7-jenkins-1" level="project" />
-    <orderEntry type="library" scope="PROVIDED" name="Maven: xpp3:xpp3:1.1.4c" level="project" />
     <orderEntry type="library" scope="PROVIDED" name="Maven: net.sf.kxml:kxml2:2.3.0" level="project" />
     <orderEntry type="library" scope="PROVIDED" name="Maven: jfree:jfreechart:1.0.9" level="project" />
     <orderEntry type="library" scope="PROVIDED" name="Maven: jfree:jcommon:1.0.12" level="project" />

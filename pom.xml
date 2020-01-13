@@ -1,15 +1,16 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
     <modelVersion>4.0.0</modelVersion>
     <parent>
         <groupId>org.jenkins-ci.plugins</groupId>
         <artifactId>plugin</artifactId>
         <version>2.33</version>
-        <relativePath />
+        <relativePath/>
     </parent>
     <groupId>org.jenkins-ci.plugins</groupId>
     <artifactId>acunetix-360-scan</artifactId>
-    <version>1.3-SNAPSHOT</version>
+    <version>${revision}</version>
     <packaging>hpi</packaging>
     <properties>
         <!-- Baseline Jenkins version you use to build the plugin. Users must have this version or newer to run. -->
@@ -20,6 +21,7 @@
           ~ stapler-plugin.version: The Stapler Maven plugin veartifactIdrsion required by the plugin.
      -->
         <java.level>8</java.level>
+        <revision>1.2.1-SNAPSHOT</revision>
     </properties>
     <name>Acunetix 360 Scan Plugin</name>
     <description>Allows users to start security scans via Acunetix 360.</description>
@@ -32,6 +34,22 @@
                     <configuration>
                         <source>1.8</source>
                         <target>1.8</target>
+                    </configuration>
+                </plugin>
+                <!--
+                this plugin adds version info to manifest, it's used to get plugin version
+                https://stackoverflow.com/questions/2712970/get-maven-artifact-version-at-runtime
+                -->
+                <plugin>
+                    <groupId>org.apache.maven.plugins</groupId>
+                    <artifactId>maven-jar-plugin</artifactId>
+                    <configuration>
+                        <archive>
+                            <manifest>
+                                <addDefaultImplementationEntries>true</addDefaultImplementationEntries>
+                                <addDefaultSpecificationEntries>true</addDefaultSpecificationEntries>
+                            </manifest>
+                        </archive>
                     </configuration>
                 </plugin>
             </plugins>
@@ -157,6 +175,11 @@
             <groupId>org.jenkins-ci.plugins</groupId>
             <artifactId>command-launcher</artifactId>
             <version>1.1</version>
+        </dependency>
+        <dependency>
+            <groupId>xpp3</groupId>
+            <artifactId>xpp3</artifactId>
+            <version>1.1.4c</version>
         </dependency>
     </dependencies>
 
