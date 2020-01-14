@@ -9,7 +9,7 @@
     </parent>
     <groupId>org.jenkins-ci.plugins</groupId>
     <artifactId>acunetix-360-scan</artifactId>
-    <version>1.2.2-SNAPSHOT</version>
+    <version>${revision}</version>
     <packaging>hpi</packaging>
     <properties>
         <!-- Baseline Jenkins version you use to build the plugin. Users must have this version or newer to run. -->
@@ -20,7 +20,7 @@
           ~ stapler-plugin.version: The Stapler Maven plugin veartifactIdrsion required by the plugin.
      -->
         <java.level>8</java.level>
-        <revision>1.2.1-SNAPSHOT</revision>
+        <revision>1.2.2-SNAPSHOT</revision>
     </properties>
     <name>Acunetix 360 Scan Plugin</name>
     <description>Allows users to start security scans via Acunetix 360.</description>
@@ -198,7 +198,7 @@
         <connection>scm:git:ssh://git@github.com/jenkinsci/${project.artifactId}-plugin.git</connection>
         <developerConnection>scm:git:ssh://git@github.com/jenkinsci/${project.artifactId}-plugin.git
         </developerConnection>
-        <url>https://github.com/jenkinsci/jenkins</url>
+        <url>https://github.com/jenkinsci/acunetix-360-scan-plugin</url>
         <tag>${scmtag}</tag>
     </scm>
     <licenses>
@@ -208,7 +208,7 @@
         </license>
     </licenses>
 
-    <url>https://wiki.jenkins.io/display/JENKINS/Acunetix+360+Scan+Plugin</url>
+    <url>https://github.com/jenkinsci/acunetix-360-scan-plugin</url>
 
     <developers>
         <developer>
