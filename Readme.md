@@ -1,17 +1,66 @@
-# Acunetix 360 Jenkins Plugin
+Acunetix 360 Scan Plugin
+====================
 
-Acunetix 360 is a scalable multi-user online web application security scanning solution with built-in workflow tools. It has built-in enterprise workflow tools and is specifically designed to help enterprises scan and manage the security of 100s and 1000s of websites.
+[![Jenkins Plugin](https://img.shields.io/jenkins/plugin/v/acunetix-360-scan.svg?color=red)](https://plugins.jenkins.io/acunetix-360-scan)
+[![Jenkins Plugin Installs](https://img.shields.io/jenkins/plugin/i/acunetix-360-scan.svg?color=red)](https://plugins.jenkins.io/acunetix-360-scan)
 
-You can request demo at:
+## About this plugin
 
-https://www.acunetix.com/web-vulnerability-scanner/demo/
+Allows users to start security scans via Acunetix 360 and see their
+reports in Jenkins 
 
-## User Guide 
+## Features
 
-Acunetix 360 Jenkins Plugin documentation is always available at:
+### Global Settings
 
-https://www.acunetix.com
+Acunetix 360 plugin needs the admin user to define the API settings
+only once.
 
-Acunetix 360 SDLC documentation is always available at:
+![](ss/jenkins_global_settings.png)
 
-https://www.acunetix.com
+### Global Settings Override
+
+Global settings can be overridden in pipeline scripts by
+giving ncApiToken and/or ncServerURL parameters.
+
+#### Example Script
+
+step([$class: 'NCScanBuilder', ncScanType: 'FullWithPrimaryProfile', ncWebsiteId: '19011b1b-4141-4331-8514-ab4102a4c135'])
+
+![](ss/NE_jenkins_new_integration.png)
+
+### Scan Settings
+
+Once you define global API settings, the plugin retrieves available
+scan settings such as scannable website list and scan profile names. You
+can easily select relevant settings.
+
+![](ss/jenkins_scan_settings.png)
+  
+### Scan Report
+
+ Once your initiated scan is completed, you can easily see your
+executive scan report on the build result window.
+
+![](ss/jenkins_scan_report.png)
+
+## Requirements
+
+In order to use the Acunetix 360 scan plugin, following requirements
+needs to be satisfied:
+
+-   The user must have API token which has permission to start security
+    scan.
+
+-   The token belongs to the Acunetix 360 account must have at least one
+    registered website. 
+
+## User Guide
+
+Acunetix 360 Jenkins Plugin documentation is always available at:
+
+<https://www.acunetix.com/> (Will be updated)
+
+Acunetix 360 SDLC documentation is always available at:
+
+<https://www.acunetix.com/> (Will be updated)
