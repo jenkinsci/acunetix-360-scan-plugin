@@ -9,10 +9,10 @@ reports in Jenkins 
 
 ### Global Settings
 
- Acunetix 360 plugin needs the admin user to define the API settings
+Acunetix 360 plugin needs the admin user to define the API settings
 only once.
 
-![](https://wiki.jenkins.io/download/attachments/175211006/image2019-7-4_10-37-16.png?version=1&modificationDate=1562225835000&api=v2){height="150"}
+![](ss/jenkins_global_settings.png)
 
 ### Global Settings Override
 
@@ -21,28 +21,24 @@ giving ncApiToken and/or ncServerURL parameters.
 
 #### Example Script
 
-step(\[$class: 'ACXScanBuilder', ncScanType: '', ncWebsiteId:
-'64de5546-c58d-4352-574e-aa3a02c258b4', ncProfileId:
-'6b0a49f9-2603-4f81-5802-aa7f0260f280'\])
+step([$class: 'NCScanBuilder', ncScanType: 'FullWithPrimaryProfile', ncWebsiteId: '19011b1b-4141-4331-8514-ab4102a4c135'])
 
-![](https://wiki.jenkins.io/download/attachments/175211006/JenkinsSS.PNG?version=2&modificationDate=1569842645000&api=v2)
+![](ss/NE_jenkins_new_integration.png)
 
-### Scan Task
+### Scan Settings
 
- Once you define global API settings, the plugin retrieves available
+Once you define global API settings, the plugin retrieves available
 scan settings such as scannable website list and scan profile names. You
 can easily select relevant settings.
 
-![](https://wiki.jenkins.io/download/attachments/175211006/jenkinsbuild.PNG?version=1&modificationDate=1569265085000&api=v2){width="1207"}
-
+![](ss/jenkins_scan_settings.png)
   
-
-Scan Report
+### Scan Report
 
  Once your initiated scan is completed, you can easily see your
 executive scan report on the build result window.
 
- ![](https://wiki.jenkins.io/download/attachments/175211006/JenkinsSSS.PNG?version=1&modificationDate=1569842690000&api=v2){width="1207"}
+![](ss/jenkins_scan_report.png)
 
 ## Requirements
 
