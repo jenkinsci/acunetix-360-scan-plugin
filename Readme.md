@@ -1,6 +1,10 @@
-Jenkins plugin for Acunetix 360
+Acunetix 360 Scan Plugin
+====================
 
-## Description
+[![Jenkins Plugin](https://img.shields.io/jenkins/plugin/v/acunetix-360-scan.svg)](https://plugins.jenkins.io/acunetix-360-scan)
+[![Jenkins Plugin Installs](https://img.shields.io/jenkins/plugin/i/acunetix-360-scan.svg?color=blue)](https://plugins.jenkins.io/acunetix-360-scan)
+
+## About this plugin
 
 Allows users to start security scans via Acunetix 360 and see their
 reports in Jenkins 
