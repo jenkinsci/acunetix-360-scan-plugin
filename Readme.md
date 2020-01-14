@@ -1,8 +1,8 @@
 Acunetix 360 Scan Plugin
 ====================
 
-[![Jenkins Plugin](https://img.shields.io/jenkins/plugin/v/acunetix-360-scan.svg)](https://plugins.jenkins.io/acunetix-360-scan)
-[![Jenkins Plugin Installs](https://img.shields.io/jenkins/plugin/i/acunetix-360-scan.svg?color=blue)](https://plugins.jenkins.io/acunetix-360-scan)
+[![Jenkins Plugin](https://img.shields.io/jenkins/plugin/v/acunetix-360-scan.svg?color=red)](https://plugins.jenkins.io/acunetix-360-scan)
+[![Jenkins Plugin Installs](https://img.shields.io/jenkins/plugin/i/acunetix-360-scan.svg?color=red)](https://plugins.jenkins.io/acunetix-360-scan)
 
 ## About this plugin
 
