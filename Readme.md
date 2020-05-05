@@ -57,10 +57,10 @@ needs to be satisfied:
 
 ## User Guide
 
-Acunetix 360 Jenkins Plugin documentation is always available at:
+Acunetix 360 Jenkins Plugin documentation is available at:
 
-<https://www.acunetix.com/> (Will be updated)
+<https://www.acunetix.com/support/docs/a360/integrations/installing-and-configuring-the-acunetix-360-scan-jenkins-plugin>
 
-Acunetix 360 SDLC documentation is always available at:
+Acunetix 360 SDLC documentation is available at:
 
-<https://www.acunetix.com/> (Will be updated)
+<https://www.acunetix.com/support/docs/a360/integrations/integrating-acunetix-360-into-your-existing-sdlc/>
