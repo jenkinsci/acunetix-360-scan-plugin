@@ -7,16 +7,15 @@ import hudson.model.listeners.SCMListener;
 import hudson.scm.ChangeLogSet;
 import hudson.scm.SCM;
 
-
 /**
- * This class registers an {@link SCMListener} with Jenkins which allows us to create
- * the "Checkout successful" event.
+ * This class registers an {@link SCMListener} with Jenkins which allows us to create the "Checkout
+ * successful" event.
  */
 @Extension
 public class NCScanSCMListener<Entry> extends SCMListener {
     /**
-     * Invoked right after the source code for the build has been checked out. It will NOT be
-     * called if a checkout fails.
+     * Invoked right after the source code for the build has been checked out. It will NOT be called
+     * if a checkout fails.
      *
      * @param build     - Current build
      * @param scm       - Configured SCM
@@ -25,7 +24,8 @@ public class NCScanSCMListener<Entry> extends SCMListener {
      * @throws Exception if an error is encountered
      */
     @Override
-    public void onChangeLogParsed(Run<?, ?> build, SCM scm, TaskListener listener, ChangeLogSet<?> changelog) throws Exception {
+    public void onChangeLogParsed(Run<?, ?> build, SCM scm, TaskListener listener,
+            ChangeLogSet<?> changelog) throws Exception {
         super.onChangeLogParsed(build, scm, listener, changelog);
 
         build.replaceAction(new NCScanSCMAction(new VCSCommit(build, changelog)));

@@ -16,7 +16,7 @@
                 method="validateAPI" with="ncServerURL,ncApiToken"/>
         <script type="text/javascript">
             (function () {
-            Q("input[name='_.ncServerURL']").attr('placeholder', "like 'https://www.acunetix360.com'");
+            Q("input[name='_.ncServerURL']").attr('placeholder', "like 'https://online.acunetix360.com'");
             })();
         </script>
     </f:section>

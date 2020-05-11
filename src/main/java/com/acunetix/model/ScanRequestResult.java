@@ -30,6 +30,7 @@ public class ScanRequestResult extends ScanRequestBase {
     private boolean isError;
     private String errorMessage;
 
+    // Response from Acunetix 360 API
     private ScanReport report = null;
     private Date previousRequestTime;
 
@@ -41,7 +42,8 @@ public class ScanRequestResult extends ScanRequestBase {
         data = "";
     }
 
-    public ScanRequestResult(HttpResponse response, String apiURL, Secret apiToken) throws MalformedURLException, URISyntaxException {
+    public ScanRequestResult(HttpResponse response, String apiURL, Secret apiToken)
+            throws MalformedURLException, URISyntaxException {
         super(apiURL, apiToken);
         httpStatusCode = response.getStatusLine().getStatusCode();
         isError = httpStatusCode != 201;
@@ -72,7 +74,12 @@ public class ScanRequestResult extends ScanRequestBase {
         queryparams.put("Format", "Html");
         queryparams.put("Id", scanTaskID);
 
-        scanReportEndpoint = scanReportEndpointUri.toString() + "?" + AppCommon.mapToQueryString(queryparams);
+        scanReportEndpoint =
+                scanReportEndpointUri.toString() + "?" + AppCommon.mapToQueryString(queryparams);
+    }
+
+    public String getScanTaskId() {
+        return scanTaskID;
     }
 
     public int getHttpStatusCode() {
@@ -88,12 +95,13 @@ public class ScanRequestResult extends ScanRequestBase {
     }
 
     public boolean isReportGenerated() {
-        //If scan request is failed we don't need additional check.
+        // If scan request is failed we don't need additional check.
         if (isError()) {
             return false;
         } else if (isReportAvailable()) {
             return true;
-        } else if (canAskForReportFromNCCloud()) {//If report is not requested or report wasn't ready in previous request we must check again.
+        } else if (canAskForReportFromNCCloud()) {// If report is not requested or report wasn't
+                                                  // ready in previous request we must check again.
             try {
                 final ScanReport report = getReport();
                 return report.isReportGenerated();
@@ -106,7 +114,7 @@ public class ScanRequestResult extends ScanRequestBase {
     }
 
     public ScanReport getReport() {
-        // if report is not generated and requested yet, request it from Netparker Cloud server.
+        // if report is not generated and requested yet, request it from server.
         if (canAskForReportFromNCCloud()) {
             final ScanReport reportFromNcCloud = getReportFromNcCloud();
             previousRequestTime = new Date();
@@ -121,9 +129,10 @@ public class ScanRequestResult extends ScanRequestBase {
 
     private boolean canAskForReportFromNCCloud() {
         Date now = new Date();
-        //Is report not requested or have request threshold passed
-        //And report isn't generated yet
-        boolean isTimeThresholdPassed = previousRequestTime == null || now.getTime() - previousRequestTime.getTime() >= 60 * 1000;//1 min
+        // Is report not requested or have request threshold passed
+        // And report isn't generated yet
+        boolean isTimeThresholdPassed = previousRequestTime == null
+                || now.getTime() - previousRequestTime.getTime() >= 60 * 1000;// 1 min
 
         return isTimeThresholdPassed || !isReportAvailable();
     }
@@ -145,13 +154,13 @@ public class ScanRequestResult extends ScanRequestBase {
 
                 reportFromApi = new ScanReport(response, scanReportEndpoint);
             } catch (IOException ex) {
-                String reportRequestErrorMessage = "Report result is not readable::: " + ex.toString();
-                reportFromApi = new ScanReport(false, "",
-                        true, reportRequestErrorMessage, scanReportEndpoint);
+                String reportRequestErrorMessage =
+                        "Report result is not readable::: " + ex.toString();
+                reportFromApi = new ScanReport(false, "", true, reportRequestErrorMessage,
+                        scanReportEndpoint);
             }
         } else {
-            reportFromApi = new ScanReport(true, errorMessage,
-                    false, "", scanReportEndpoint);
+            reportFromApi = new ScanReport(true, errorMessage, false, "", scanReportEndpoint);
         }
 
         this.report = reportFromApi;

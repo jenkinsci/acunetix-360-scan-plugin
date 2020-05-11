@@ -1,7 +1,6 @@
 package com.acunetix.model;
 
 import com.acunetix.utility.AppCommon;
-import com.google.common.base.Strings;
 import hudson.model.Run;
 import hudson.model.User;
 import hudson.scm.ChangeLogSet;
@@ -10,11 +9,9 @@ import jenkins.model.Jenkins;
 import org.apache.http.NameValuePair;
 import org.apache.http.message.BasicNameValuePair;
 
-import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
-import java.util.Properties;
 
 public class VCSCommit {
 
@@ -58,7 +55,6 @@ public class VCSCommit {
                 committer = fullName;
             }
 
-
         } else {
             versionControlName = "";
             ciTimestamp = iso8601DateTimeFormat.format(new Date());
@@ -68,7 +64,7 @@ public class VCSCommit {
 
         VersionNumber versionNumber = Jenkins.getVersion();
         ciBuildServerVersion = versionNumber != null ? versionNumber.toString() : "Not found.";
-        ciNcPluginVersion = null; //don't add plugin version number
+        ciNcPluginVersion = null; // don't add plugin version number
     }
 
     public static VCSCommit empty(Run<?, ?> build) {
@@ -86,11 +82,15 @@ public class VCSCommit {
     public void addVcsCommitInfo(List<NameValuePair> params) {
         params.add(new BasicNameValuePair("VcsCommitInfoModel.CiBuildId", buildId));
         params.add(new BasicNameValuePair("VcsCommitInfoModel.IntegrationSystem", "Jenkins"));
-        params.add(new BasicNameValuePair("VcsCommitInfoModel.CiBuildServerVersion", ciBuildServerVersion));
-        params.add(new BasicNameValuePair("VcsCommitInfoModel.CiNcPluginVersion", ciNcPluginVersion));
-        params.add(new BasicNameValuePair("VcsCommitInfoModel.CiBuildConfigurationName", buildConfigurationName));
+        params.add(new BasicNameValuePair("VcsCommitInfoModel.CiBuildServerVersion",
+                ciBuildServerVersion));
+        params.add(
+                new BasicNameValuePair("VcsCommitInfoModel.CiNcPluginVersion", ciNcPluginVersion));
+        params.add(new BasicNameValuePair("VcsCommitInfoModel.CiBuildConfigurationName",
+                buildConfigurationName));
         params.add(new BasicNameValuePair("VcsCommitInfoModel.CiBuildUrl", rootURL + buildURL));
-        params.add(new BasicNameValuePair("VcsCommitInfoModel.CiBuildHasChange", String.valueOf(buildHasChange)));
+        params.add(new BasicNameValuePair("VcsCommitInfoModel.CiBuildHasChange",
+                String.valueOf(buildHasChange)));
         params.add(new BasicNameValuePair("VcsCommitInfoModel.CiTimestamp", ciTimestamp));
         params.add(new BasicNameValuePair("VcsCommitInfoModel.VcsName", versionControlName));
         params.add(new BasicNameValuePair("VcsCommitInfoModel.VcsVersion", vcsVersion));

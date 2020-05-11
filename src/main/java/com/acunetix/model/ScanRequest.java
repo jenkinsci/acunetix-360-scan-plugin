@@ -2,15 +2,11 @@ package com.acunetix.model;
 
 import hudson.util.Secret;
 import org.apache.http.HttpHeaders;
-import org.apache.http.HttpHost;
 import org.apache.http.HttpResponse;
 import org.apache.http.NameValuePair;
 import org.apache.http.client.HttpClient;
 import org.apache.http.client.entity.UrlEncodedFormEntity;
 import org.apache.http.client.methods.HttpPost;
-import org.apache.http.impl.client.CloseableHttpClient;
-import org.apache.http.impl.client.HttpClients;
-import org.apache.http.impl.conn.DefaultProxyRoutePlanner;
 import org.apache.http.message.BasicNameValuePair;
 
 import java.io.IOException;
@@ -22,7 +18,9 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class ScanRequest extends ScanRequestBase {
-    public ScanRequest(String apiURL, Secret apiToken, String scanType, String websiteId, String profileId, VCSCommit vcsCommit) throws MalformedURLException, NullPointerException, URISyntaxException {
+    public ScanRequest(String apiURL, Secret apiToken, String scanType, String websiteId,
+            String profileId, VCSCommit vcsCommit)
+            throws MalformedURLException, NullPointerException, URISyntaxException {
         super(apiURL, apiToken);
         this.scanType = ScanType.valueOf(scanType);
         this.websiteId = websiteId;
@@ -89,4 +87,3 @@ public class ScanRequest extends ScanRequestBase {
         }
     }
 }
-
