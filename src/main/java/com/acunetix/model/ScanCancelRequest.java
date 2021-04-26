@@ -15,7 +15,7 @@ public class ScanCancelRequest extends ScanRequestBase {
     public ScanCancelRequest(String apiURL, Secret apiToken,String scanTaskId) throws MalformedURLException, NullPointerException, URISyntaxException {
         super(apiURL, apiToken);
         this.scanTaskId = scanTaskId;
-        scanCancelUri = new URL(ApiURL, "api/1.0/scans/CancelScanForPlugin/").toURI();
+        this.scanCancelUri = new URL(ApiURL, "api/1.0/scans/CancelScanForPlugin/").toURI();
     }
 
     public final String scanTaskId;

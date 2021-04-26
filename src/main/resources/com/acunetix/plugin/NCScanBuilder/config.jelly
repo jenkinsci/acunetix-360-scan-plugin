@@ -23,16 +23,32 @@
             <f:select field="ncProfileId" default="" id="ncProfileId-${editorId}"/>
         </f:entry>
        
-        <f:entry title="${%Fail the build if scan contains }" field="ncSeverity" id="ncSeverity-${editorId}" help="/plugin/acunetix-360-scan/help-ncseverity.html">
+        <f:entry title="${%Fail The Build If Scan Contains }" field="ncSeverity" id="ncSeverity-${editorId}" help="/plugin/acunetix-360-scan/help-ncseverity.html">
             <f:select id="ncSeverity-${editorId}" />
         </f:entry>
+
+        <f:invisibleEntry field="ncDoNotFail" id="ncDoNotFail-${editorId}">
+            <f:checkbox field="ncDoNotFail" id="ncDoNotFail-${editorId}"/>
+        </f:invisibleEntry>
+
         <f:entry field="ncConfirmed" id="ncConfirmed-${editorId}" help="/plugin/acunetix-360-scan/help-ncconfirmed.html">
             <f:checkbox field="ncConfirmed" id="ncConfirmed-${editorId}"/>
-            ${%Fail the build when scan contains confirmed}
+            ${%Is Confirmed}
         </f:entry>
-         <f:entry field="ncStopScan" id="ncStopScan-${editorId}" help="/plugin/acunetix-360-scan/help-ncstopscan.html">
+
+        <f:entry field="ncIgnoreFalsePositive" id="ncIgnoreFalsePositive-${editorId}" help="/plugin/netsparker-cloud-scan/help-ncignorefalsepositive.html">
+            <f:checkbox field="ncIgnoreFalsePositive" id="ncIgnoreFalsePositive-${editorId}"/>
+            ${%Do Not Fail The Build When Scan Contains False Positive}
+        </f:entry>
+
+        <f:entry field="ncIgnoreRiskAccepted" id="ncIgnoreRiskAccepted-${editorId}" help="/plugin/netsparker-cloud-scan/help-ncignoreriskaccepted.html">
+            <f:checkbox field="ncIgnoreRiskAccepted" id="ncIgnoreRiskAccepted-${editorId}"/>
+            ${%Do Not Fail The Build When Scan Contains Accepted Risk}
+        </f:entry>
+
+        <f:entry field="ncStopScan" id="ncStopScan-${editorId}" help="/plugin/acunetix-360-scan/help-ncstopscan.html">
             <f:checkbox field="ncStopScan"  id="ncStopScan-${editorId}"/>
-            ${%Stop the scan when build fails}
+            ${%Stop The Scan When Build Fails}
         </f:entry>
 
         <f:advanced>
@@ -54,17 +70,26 @@
                         var stopScanCheckBox = Q('#ncStopScan-${editorId}');
 
                          if (ncSeverityValue == "DoNotFail") {
-                            
                             ncStopScanRow.css("opacity","0.5");
                             stopScanCheckBox.prop("checked", false);
                             stopScanCheckBox.attr("disabled", "disabled");
 
                         } else {
-                            
                             ncStopScanRow.css("opacity","1");
                             stopScanCheckBox.removeAttr("disabled");
 
                         }
+                }
+
+                function toggleDoNotFailHiddenCheckBox(ncSeverityValue){
+                    var ncDoNotFailRow = Q('#ncDoNotFail-${editorId}').closest("tr");
+                    var doNotFailHiddenCheckBox = Q('#ncDoNotFail-${editorId}');
+                    console.log(ncSeverityValue);
+                    if (ncSeverityValue == "DoNotFail") {
+                        doNotFailHiddenCheckBox.prop("checked", true);
+                    }else{
+                        doNotFailHiddenCheckBox.prop("checked", false);
+                    }
                 }
 
                 function toggleConfirmedCheckBox(ncSeverityValue){
@@ -80,12 +105,45 @@
                         }
                 }
 
+                function toggleIgnoreFalsePositiveCheckBox(ncSeverityValue){
+                    var ncIgnoreFalsePositiveRow = Q('#ncIgnoreFalsePositive-${editorId}').closest("tr");
+                    var ignoreFalsePositiveCheckBox = Q('#ncIgnoreFalsePositive-${editorId}');
+                    if (ncSeverityValue == "DoNotFail") {
+                        ncIgnoreFalsePositiveRow.css("opacity","0.5");
+                        ignoreFalsePositiveCheckBox.prop("checked", false);
+                        ignoreFalsePositiveCheckBox.attr("disabled", "disabled");
+                    } else {
+                        ncIgnoreFalsePositiveRow.css("opacity","1");
+                        ignoreFalsePositiveCheckBox.removeAttr("disabled");
+                    }
+                }
+
+                function toggleIgnoreRiskAcceptedCheckBox(ncSeverityValue){
+                    var ncIgnoreRiskAcceptedRow = Q('#ncIgnoreRiskAccepted-${editorId}').closest("tr");
+                    var ignoreRiskAcceptedCheckBox = Q('#ncIgnoreRiskAccepted-${editorId}');
+                    if (ncSeverityValue == "DoNotFail") {
+                        ncIgnoreRiskAcceptedRow.css("opacity","0.5");
+                        ignoreRiskAcceptedCheckBox.prop("checked", false);
+                        ignoreRiskAcceptedCheckBox.attr("disabled", "disabled");
+                    } else {
+                        ncIgnoreRiskAcceptedRow.css("opacity","1");
+                        ignoreRiskAcceptedCheckBox.removeAttr("disabled");
+                    }
+                }
 
                 function setStopScanVisibility() {
 
                     Q('#ncSeverity-${editorId}').change(function () {
                         var ncSeverityValue = Q('#ncSeverity-${editorId}').val();
                         toggleStopScanCheckBox(ncSeverityValue);
+                    })
+                };
+
+                function setDoNotFailVisibility() {
+
+                    Q('#ncSeverity-${editorId}').change(function () {
+                        var ncSeverityValue = Q('#ncSeverity-${editorId}').val();
+                        toggleDoNotFailHiddenCheckBox(ncSeverityValue);
                     })
                 };
 
@@ -97,6 +155,21 @@
                     })
                 };
 
+                function setIgnoreFalsePositiveVisibility() {
+
+                    Q('#ncSeverity-${editorId}').change(function () {
+                        var ncSeverityValue = Q('#ncSeverity-${editorId}').val();
+                        toggleIgnoreFalsePositiveCheckBox(ncSeverityValue);
+                    })
+                };
+
+                function setIgnoreRiskAcceptedVisibility() {
+
+                    Q('#ncSeverity-${editorId}').change(function () {
+                        var ncSeverityValue = Q('#ncSeverity-${editorId}').val();
+                        toggleIgnoreRiskAcceptedCheckBox(ncSeverityValue);
+                    })
+                };
 
                 function setProfileNameVisibility() {
                     Q('#ncScanType-${editorId}').change(function () {
@@ -132,17 +205,26 @@
                 });
 
                 setStopScanVisibility();
+                setDoNotFailVisibility();
                 setConfirmedVisibility();
+                setIgnoreFalsePositiveVisibility();
+                setIgnoreRiskAcceptedVisibility();
 
                //function will be triggered when #ncSeverity-${editorId} element created first time inside .jenkins-config
                 Q(".jenkins-config").arrive("#ncSeverity-${editorId}", function () {
                     // 'this' refers to the newly created element
                     setStopScanVisibility();
+                    setDoNotFailVisibility();
                     setConfirmedVisibility();
+                    setIgnoreFalsePositiveVisibility();
+                    setIgnoreRiskAcceptedVisibility();
                     //default might be DotNotFail so check toogle, timeout used for element ready.
-                    setTimeout(function(){ 
+                    setTimeout(function(){
                         toggleStopScanCheckBox(Q("#ncSeverity-${editorId}").val());
                         toggleConfirmedCheckBox(Q("#ncSeverity-${editorId}").val());
+                        toggleIgnoreFalsePositiveCheckBox(Q("#ncSeverity-${editorId}").val());
+                        toggleIgnoreRiskAcceptedCheckBox(Q("#ncSeverity-${editorId}").val());
+                        toggleDoNotFailHiddenCheckBox(Q("#ncSeverity-${editorId}").val());
                      }, 500);
 
                     Q(".jenkins-config").unbindArrive("#ncSeverity-${editorId}");
@@ -150,11 +232,13 @@
 
                 
                 //editor arrive doesn't work on edit.
-                 setTimeout(function(){ 
+                setTimeout(function(){
                         toggleStopScanCheckBox(Q("#ncSeverity-${editorId}").val());
                         toggleConfirmedCheckBox(Q("#ncSeverity-${editorId}").val());
-                 }, 1000);
-
+                        toggleIgnoreFalsePositiveCheckBox(Q("#ncSeverity-${editorId}").val());
+                        toggleIgnoreRiskAcceptedCheckBox(Q("#ncSeverity-${editorId}").val());
+                        toggleDoNotFailHiddenCheckBox(Q("#ncSeverity-${editorId}").val());
+                }, 1000);
 
             })();
         </script>

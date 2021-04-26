@@ -21,7 +21,7 @@ only once.
 ### Global Settings Override
 
 Global settings can be overridden in pipeline scripts by
-giving ncApiToken and/or ncServerURL parameters.
+giving ncApiToken and/or acxServerURL parameters.
 
 #### Example Script
 
