@@ -36,12 +36,12 @@
             ${%Is Confirmed}
         </f:entry>
 
-        <f:entry field="ncIgnoreFalsePositive" id="ncIgnoreFalsePositive-${editorId}" help="/plugin/acunetix-360-scan/help-ncignorefalsepositive.html">
+        <f:entry field="ncIgnoreFalsePositive" id="ncIgnoreFalsePositive-${editorId}" help="/plugin/netsparker-cloud-scan/help-ncignorefalsepositive.html">
             <f:checkbox field="ncIgnoreFalsePositive" id="ncIgnoreFalsePositive-${editorId}"/>
             ${%Do Not Fail The Build When Scan Contains False Positive}
         </f:entry>
 
-        <f:entry field="ncIgnoreRiskAccepted" id="ncIgnoreRiskAccepted-${editorId}" help="/plugin/acunetix-360-scan/help-ncignoreriskaccepted.html">
+        <f:entry field="ncIgnoreRiskAccepted" id="ncIgnoreRiskAccepted-${editorId}" help="/plugin/netsparker-cloud-scan/help-ncignoreriskaccepted.html">
             <f:checkbox field="ncIgnoreRiskAccepted" id="ncIgnoreRiskAccepted-${editorId}"/>
             ${%Do Not Fail The Build When Scan Contains Accepted Risk}
         </f:entry>

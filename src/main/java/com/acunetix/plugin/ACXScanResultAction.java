@@ -10,13 +10,13 @@ import org.kohsuke.stapler.verb.GET;
 
 import javax.annotation.CheckForNull;
 
-public class NCScanResultAction implements Action, RunAction2 {
+public class ACXScanResultAction implements Action, RunAction2 {
 
     private ScanRequestResult scanRequestResult;
 
     private transient Run run;
 
-    public NCScanResultAction(ScanRequestResult scanRequestResult) {
+    public ACXScanResultAction(ScanRequestResult scanRequestResult) {
         this.scanRequestResult = scanRequestResult;
     }
 

@@ -25,7 +25,7 @@ giving ncApiToken and/or acxServerURL parameters.
 
 #### Example Script
 
-step([$class: 'NCScanBuilder', ncScanType: 'FullWithPrimaryProfile', ncWebsiteId: '19011b1b-4141-4331-8514-ab4102a4c135'])
+step([$class: 'ACXScanBuilder', ncScanType: 'FullWithPrimaryProfile', ncWebsiteId: '19011b1b-4141-4331-8514-ab4102a4c135'])
 
 ![](ss/NE_jenkins_new_integration.png)
 

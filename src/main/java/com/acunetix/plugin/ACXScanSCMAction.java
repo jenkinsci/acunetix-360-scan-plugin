@@ -5,11 +5,11 @@ import hudson.model.Action;
 
 import javax.annotation.CheckForNull;
 
-public class NCScanSCMAction implements Action {
+public class ACXScanSCMAction implements Action {
 
 	private final VCSCommit vcsCommit;
 
-	public NCScanSCMAction(VCSCommit vcsCommit) {
+	public ACXScanSCMAction(VCSCommit vcsCommit) {
 		this.vcsCommit = vcsCommit;
 	}
 
@@ -26,7 +26,7 @@ public class NCScanSCMAction implements Action {
 	@CheckForNull
 	@Override
 	public String getDisplayName() {
-		return "NCScanSCMAction";
+		return "ACXScanSCMAction";
 	}
 
 	@CheckForNull

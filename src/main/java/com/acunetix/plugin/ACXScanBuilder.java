@@ -56,7 +56,7 @@ import jenkins.model.Jenkins;
 import jenkins.tasks.SimpleBuildStep;
 import net.sf.json.JSONObject;
 
-public class NCScanBuilder extends Builder implements SimpleBuildStep {
+public class ACXScanBuilder extends Builder implements SimpleBuildStep {
 
     private String ncScanType;
     private String ncWebsiteId;
@@ -78,7 +78,7 @@ public class NCScanBuilder extends Builder implements SimpleBuildStep {
     // "DataBoundConstructor"
     // this ctor called when project's settings save method called
     @DataBoundConstructor
-    public NCScanBuilder(String ncScanType, String ncWebsiteId, String ncProfileId, Boolean ncDoNotFail) {
+    public ACXScanBuilder(String ncScanType, String ncWebsiteId, String ncProfileId, Boolean ncDoNotFail) {
         this.ncScanType = ncScanType == null ? "" : ncScanType;
         this.ncWebsiteId = ncWebsiteId == null ? "" : ncWebsiteId;
         this.ncProfileId = ncProfileId == null ? "" : ncProfileId;
@@ -213,17 +213,17 @@ public class NCScanBuilder extends Builder implements SimpleBuildStep {
             TaskListener listener) throws InterruptedException, IOException {
         logInfo("Scan step created...", listener);
 
-        NCScanSCMAction scmAction = build.getAction(NCScanSCMAction.class);
+        ACXScanSCMAction scmAction = build.getAction(ACXScanSCMAction.class);
         VCSCommit commit = scmAction == null ? VCSCommit.empty(build) : scmAction.getVcsCommit();
 
         try {
             ScanRequestHandler(build, commit, listener);
         } catch (Exception e) {
             try {
-                build.replaceAction(new NCScanResultAction(
+                build.replaceAction(new ACXScanResultAction(
                         ScanRequestResult.errorResult("Scan Request Failed:: " + e.getMessage())));
             } catch (Exception ex) {
-                build.addAction(new NCScanResultAction(
+                build.addAction(new ACXScanResultAction(
                         ScanRequestResult.errorResult("Scan Request Failed:: " + e.getMessage())));
             }
 
@@ -311,7 +311,7 @@ public class NCScanBuilder extends Builder implements SimpleBuildStep {
 
         ScanRequestResult scanRequestResult =
                 new ScanRequestResult(scanRequestResponse, acxServerURL, ncApiToken);
-        build.replaceAction(new NCScanResultAction(scanRequestResult));
+        build.replaceAction(new ACXScanResultAction(scanRequestResult));
 
         setFilters();
 
@@ -447,7 +447,7 @@ public class NCScanBuilder extends Builder implements SimpleBuildStep {
         return (DescriptorImpl) super.getDescriptor();
     }
 
-    @Symbol("NCScanBuilder")
+    @Symbol("ACXScanBuilder")
     @Extension
     public static final class DescriptorImpl extends BuildStepDescriptor<Builder> {
         private long lastEditorId = 0;
@@ -458,7 +458,7 @@ public class NCScanBuilder extends Builder implements SimpleBuildStep {
         private String rootURL;
 
         public DescriptorImpl() {
-            super(NCScanBuilder.class);
+            super(ACXScanBuilder.class);
             load();
         }
 
@@ -490,7 +490,7 @@ public class NCScanBuilder extends Builder implements SimpleBuildStep {
 
         @Override
         public String getDisplayName() {
-            return Messages.NCScanBuilder_DescriptorImpl_DisplayName();
+            return Messages.ACXScanBuilder_DescriptorImpl_DisplayName();
         }
 
         @Override
@@ -684,10 +684,10 @@ public class NCScanBuilder extends Builder implements SimpleBuildStep {
         public FormValidation doCheckAcxServerURL(@QueryParameter String value) {
             if (value.length() == 0) {
                 return FormValidation
-                        .error(Messages.NCScanBuilder_DescriptorImpl_errors_missingApiURL());
+                        .error(Messages.ACXScanBuilder_DescriptorImpl_errors_missingApiURL());
             } else if (!AppCommon.isUrlValid(value)) {
                 return FormValidation
-                        .error(Messages.NCScanBuilder_DescriptorImpl_errors_invalidApiURL());
+                        .error(Messages.ACXScanBuilder_DescriptorImpl_errors_invalidApiURL());
             }
 
             return FormValidation.ok();
@@ -698,7 +698,7 @@ public class NCScanBuilder extends Builder implements SimpleBuildStep {
         public FormValidation doCheckNcApiToken(@QueryParameter String value) {
             if (value.length() == 0) {
                 return FormValidation
-                        .error(Messages.NCScanBuilder_DescriptorImpl_errors_missingApiToken());
+                        .error(Messages.ACXScanBuilder_DescriptorImpl_errors_missingApiToken());
             }
 
             return FormValidation.ok();
@@ -710,7 +710,7 @@ public class NCScanBuilder extends Builder implements SimpleBuildStep {
                 ScanType.valueOf(value);
             } catch (Exception ex) {
                 return FormValidation
-                        .error(Messages.NCScanBuilder_DescriptorImpl_errors_invalidScanType());
+                        .error(Messages.ACXScanBuilder_DescriptorImpl_errors_invalidScanType());
             }
 
             return FormValidation.ok();
@@ -721,7 +721,7 @@ public class NCScanBuilder extends Builder implements SimpleBuildStep {
 
             if (!AppCommon.isGUIDValid(value)) {
                 return FormValidation
-                        .error(Messages.NCScanBuilder_DescriptorImpl_errors_invalidWebsiteId());
+                        .error(Messages.ACXScanBuilder_DescriptorImpl_errors_invalidWebsiteId());
             }
 
             return FormValidation.ok();
@@ -738,12 +738,12 @@ public class NCScanBuilder extends Builder implements SimpleBuildStep {
                 isRequired = type != ScanType.FullWithPrimaryProfile;
             } catch (Exception ex) {
                 return FormValidation
-                        .error(Messages.NCScanBuilder_DescriptorImpl_errors_invalidProfileId());
+                        .error(Messages.ACXScanBuilder_DescriptorImpl_errors_invalidProfileId());
             }
 
             if (isRequired && !AppCommon.isGUIDValid(value)) {
                 return FormValidation
-                        .error(Messages.NCScanBuilder_DescriptorImpl_errors_invalidProfileId());
+                        .error(Messages.ACXScanBuilder_DescriptorImpl_errors_invalidProfileId());
             }
 
             return FormValidation.ok();

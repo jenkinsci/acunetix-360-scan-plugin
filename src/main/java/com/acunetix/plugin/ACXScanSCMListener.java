@@ -12,7 +12,7 @@ import hudson.scm.SCM;
  * successful" event.
  */
 @Extension
-public class NCScanSCMListener<Entry> extends SCMListener {
+public class ACXScanSCMListener<Entry> extends SCMListener {
     /**
      * Invoked right after the source code for the build has been checked out. It will NOT be called
      * if a checkout fails.
@@ -28,6 +28,6 @@ public class NCScanSCMListener<Entry> extends SCMListener {
             ChangeLogSet<?> changelog) throws Exception {
         super.onChangeLogParsed(build, scm, listener, changelog);
 
-        build.replaceAction(new NCScanSCMAction(new VCSCommit(build, changelog)));
+        build.replaceAction(new ACXScanSCMAction(new VCSCommit(build, changelog)));
     }
 }
