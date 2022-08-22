@@ -556,7 +556,6 @@ public class ACXScanBuilder extends Builder implements SimpleBuildStep {
         @SuppressWarnings("unused")
         public ListBoxModel doFillNcScanTypeItems() {
             ListBoxModel model = new ListBoxModel();
-            model.add("-- Please select a scan type --", "");
             model.add("Incremental", "Incremental");
             model.add("Full (With primary profile)", "FullWithPrimaryProfile");
             model.add("Full (With selected profile)", "FullWithSelectedProfile");
@@ -572,9 +571,7 @@ public class ACXScanBuilder extends Builder implements SimpleBuildStep {
             }
 
             ListBoxModel model = new ListBoxModel();
-            if (model.isEmpty()) {
-                model.add("-- Please select a website --", "");
-            }
+            
             for (WebsiteModel websiteModel : websiteModels) {
                 model.add(websiteModel.getDisplayName(), websiteModel.getId());
             }
@@ -594,14 +591,11 @@ public class ACXScanBuilder extends Builder implements SimpleBuildStep {
 
             String placeholderText;
             final ArrayList<WebsiteProfileModel> websiteProfileModels = websiteModel.getProfiles();
+            ListBoxModel model = new ListBoxModel();
             if (websiteProfileModels.isEmpty()) {
                 placeholderText = "-- No profile found --";
-            } else {
-                placeholderText = "-- Please select a profile name --";
+                model.add(placeholderText, "");
             }
-
-            ListBoxModel model = new ListBoxModel();
-            model.add(placeholderText, "");
 
             for (WebsiteProfileModel websiteProfileModel : websiteProfileModels) {
                 model.add(websiteProfileModel.getName(), websiteProfileModel.getId());

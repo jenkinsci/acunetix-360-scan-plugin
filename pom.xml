@@ -13,7 +13,7 @@
     <packaging>hpi</packaging>
     <properties>
         <!-- Baseline Jenkins version you use to build the plugin. Users must have this version or newer to run. -->
-        <jenkins.version>2.303.1</jenkins.version>
+        <jenkins.version>2.346</jenkins.version>
         <!-- Other properties you may want to use:
           ~ java.level: set to 6 if your jenkins.version <= 1.611 ~ jenkins-test-harness.version: Jenkins Test Harness version you use to test the plugin. For Jenkins version >= 1.580.1 use JTH 2.0 or higher.
           ~ hpi-plugin.version: The HPI Maven Plugin version used by the plugin..
@@ -54,6 +54,16 @@
         </pluginManagement>
     </build>
     <dependencies>
+        <dependency>
+            <groupId>javax.mail</groupId>
+            <artifactId>mail</artifactId>
+            <version>1.4.5</version>
+        </dependency>
+        <dependency>
+            <groupId>org.jenkins-ci</groupId>
+            <artifactId>symbol-annotation</artifactId>
+            <version>1.20</version>
+        </dependency>
         <dependency>
             <groupId>org.kohsuke.stapler</groupId>
             <artifactId>stapler-adjunct-jquery</artifactId>
@@ -113,7 +123,7 @@
         <dependency>
             <groupId>org.jenkins-ci.plugins</groupId>
             <artifactId>structs</artifactId>
-            <version>1.20</version>
+            <version>1.24</version>
         </dependency>
         <dependency>
             <groupId>org.jenkins-ci.plugins.workflow</groupId>
