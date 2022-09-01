@@ -11,6 +11,7 @@ import com.cloudbees.plugins.credentials.CredentialsProvider;
 import com.cloudbees.plugins.credentials.common.StandardListBoxModel;
 import com.cloudbees.plugins.credentials.common.StandardUsernamePasswordCredentials;
 import com.acunetix.model.IgnoredVulnerabilityStateFilters;
+import com.acunetix.model.ReportType;
 import com.acunetix.model.ScanCancelRequest;
 import com.acunetix.model.ScanCancelRequestResult;
 import com.acunetix.model.ScanInfoRequest;
@@ -71,6 +72,7 @@ public class ACXScanBuilder extends Builder implements SimpleBuildStep {
     private Boolean ncIgnoreFalsePositive;
     private Boolean ncIgnoreRiskAccepted;
     private IgnoredVulnerabilityStateFilters ncFilters = new IgnoredVulnerabilityStateFilters();
+    private String ncReportType;
 
     private final String apiTokenBuildParameterName = "APITOKEN";
 
@@ -78,11 +80,12 @@ public class ACXScanBuilder extends Builder implements SimpleBuildStep {
     // "DataBoundConstructor"
     // this ctor called when project's settings save method called
     @DataBoundConstructor
-    public ACXScanBuilder(String ncScanType, String ncWebsiteId, String ncProfileId, Boolean ncDoNotFail) {
+    public ACXScanBuilder(String ncScanType, String ncWebsiteId, String ncProfileId, Boolean ncDoNotFail, String ncReportType) {
         this.ncScanType = ncScanType == null ? "" : ncScanType;
         this.ncWebsiteId = ncWebsiteId == null ? "" : ncWebsiteId;
         this.ncProfileId = ncProfileId == null ? "" : ncProfileId;
         this.ncDoNotFail = ncDoNotFail;
+        this.ncReportType = ncReportType == null || ncReportType.equals("null") ? "ExecutiveSummary" : ncReportType;
     }
 
     public String getNcSeverity() {
@@ -208,6 +211,15 @@ public class ACXScanBuilder extends Builder implements SimpleBuildStep {
         this.ncIgnoreRiskAccepted = ncIgnoreRiskAccepted;
     }
 
+    public String getNcReportType(){
+        return ncReportType;
+    }
+
+    @DataBoundSetter
+    public void setNcReportType(String ncReportType) {
+        this.ncReportType = ncReportType;
+    }
+
     @Override
     public void perform(Run<?, ?> build, FilePath workspace, Launcher launcher,
             TaskListener listener) throws InterruptedException, IOException {
@@ -310,7 +322,7 @@ public class ACXScanBuilder extends Builder implements SimpleBuildStep {
                 listener);
 
         ScanRequestResult scanRequestResult =
-                new ScanRequestResult(scanRequestResponse, acxServerURL, ncApiToken);
+                new ScanRequestResult(scanRequestResponse, acxServerURL, ncApiToken, ncReportType);
         build.replaceAction(new ACXScanResultAction(scanRequestResult));
 
         setFilters();
@@ -604,6 +616,23 @@ public class ACXScanBuilder extends Builder implements SimpleBuildStep {
             return model;
         }
 
+        @SuppressWarnings("unused")
+        public ListBoxModel doFillNcReportTypeItems() {
+            ListBoxModel model = new ListBoxModel();
+            model.add("Detailed Scan Report","ScanDetail");       
+            model.add("Executive Summary","ExecutiveSummary"); 
+            model.add("Full Scan Detail","FullScanDetail");
+            model.add("HIPAA Compliance","HIPAACompliance"); 
+            model.add("ISO 27001 Compliance","Iso27001Compliance");
+            model.add("Knowledge Base", "KnowledgeBase");     
+            model.add("OWASP Top Ten 2013","OwaspTopTen2013");   
+            model.add("OWASP Top Ten 2017","OwaspTopTen2017"); 
+            model.add("PCI DSS Compliance","PCICompliance");  
+            model.add("SANS Top 25", "SansTop25");     
+            model.add("WASC Threat Classification","WASC");
+            return model;
+        }
+
         private int updateWebsiteModels(final String acxServerURL, final Secret ncApiToken)
                 throws IOException, URISyntaxException, ParseException {
             WebsiteModelRequest websiteModelRequest =
@@ -738,6 +767,19 @@ public class ACXScanBuilder extends Builder implements SimpleBuildStep {
             if (isRequired && !AppCommon.isGUIDValid(value)) {
                 return FormValidation
                         .error(Messages.ACXScanBuilder_DescriptorImpl_errors_invalidProfileId());
+            }
+
+            return FormValidation.ok();
+        }
+
+        @SuppressWarnings("unused")
+        public FormValidation doCheckNcReportType(@QueryParameter String value) {
+
+            try {
+                ReportType.valueOf(value);
+            } catch (Exception ex) {
+                return FormValidation
+                        .error(Messages.ACXScanBuilder_DescriptorImpl_errors_invalidReportType());
             }
 
             return FormValidation.ok();
