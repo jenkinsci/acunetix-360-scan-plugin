@@ -6,8 +6,8 @@ import hudson.model.User;
 import hudson.scm.ChangeLogSet;
 import hudson.util.VersionNumber;
 import jenkins.model.Jenkins;
-import org.apache.http.NameValuePair;
-import org.apache.http.message.BasicNameValuePair;
+import org.apache.hc.core5.http.NameValuePair;
+import org.apache.hc.core5.http.message.BasicNameValuePair;
 
 import java.text.SimpleDateFormat;
 import java.util.Date;

@@ -13,14 +13,14 @@ import hudson.security.ACL;
 import jenkins.model.Jenkins;
 import org.apache.commons.io.IOUtils;
 import org.apache.commons.validator.routines.UrlValidator;
-import org.apache.http.HttpResponse;
+import org.apache.hc.core5.http.HttpResponse;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
 import org.json.simple.parser.ParseException;
 
-import javax.mail.internet.AddressException;
-import javax.mail.internet.InternetAddress;
+import jakarta.mail.internet.AddressException;
+import jakarta.mail.internet.InternetAddress;
 import java.io.*;
 import java.net.MalformedURLException;
 import java.net.URL;
@@ -134,7 +134,7 @@ public class AppCommon {
 	}
 
 	public static String parseResponseToString(HttpResponse response) throws IOException {
-		return IOUtils.toString(response.getEntity().getContent(), Charsets.UTF_8);
+		return response.toString();
 	}
 
 	public static StandardUsernamePasswordCredentials findCredentialsById(

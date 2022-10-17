@@ -2,10 +2,10 @@ package com.acunetix.model;
 
 import com.acunetix.utility.AppCommon;
 import hudson.util.Secret;
-import org.apache.http.HttpHeaders;
-import org.apache.http.HttpResponse;
-import org.apache.http.client.HttpClient;
-import org.apache.http.client.methods.HttpGet;
+import org.apache.hc.core5.http.HttpHeaders;
+import org.apache.hc.core5.http.HttpResponse;
+import org.apache.hc.client5.http.classic.HttpClient;
+import org.apache.hc.client5.http.classic.methods.HttpGet;
 import org.json.simple.parser.ParseException;
 
 import java.io.IOException;
@@ -45,7 +45,7 @@ public class ScanRequestResult extends ScanRequestBase {
     public ScanRequestResult(HttpResponse response, String apiURL, Secret apiToken, String ncReportType)
             throws MalformedURLException, URISyntaxException {
         super(apiURL, apiToken);
-        httpStatusCode = response.getStatusLine().getStatusCode();
+        httpStatusCode = response.getCode();
         isError = httpStatusCode != 201;
 
         if (!isError) {

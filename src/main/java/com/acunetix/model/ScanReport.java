@@ -1,7 +1,7 @@
 package com.acunetix.model;
 
 import com.acunetix.utility.AppCommon;
-import org.apache.http.HttpResponse;
+import org.apache.hc.core5.http.HttpResponse;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
 import org.json.simple.parser.ParseException;
@@ -103,9 +103,9 @@ public class ScanReport {
         if (requestURI != null) {
             content = content + "<p>Request URL: " + requestURI + "</p>";
         }
-        if (reportRequestResponse != null && reportRequestResponse.getStatusLine() != null) {
+        if (reportRequestResponse != null) {
             content = content + "<p>HttpStatusCode: "
-                    + reportRequestResponse.getStatusLine().getStatusCode() + "</p>";
+                    + reportRequestResponse.getCode() + "</p>";
         }
         if (ExceptionMessage != null) {
             content = content + "<p>Exception Message:: " + ExceptionMessage + "</p>";

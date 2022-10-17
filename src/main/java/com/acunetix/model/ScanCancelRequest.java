@@ -1,10 +1,10 @@
 package com.acunetix.model;
 
 import hudson.util.Secret;
-import org.apache.http.HttpHeaders;
-import org.apache.http.HttpResponse;
-import org.apache.http.client.HttpClient;
-import org.apache.http.client.methods.HttpPost;
+import org.apache.hc.core5.http.HttpHeaders;
+import org.apache.hc.core5.http.HttpResponse;
+import org.apache.hc.client5.http.classic.HttpClient;
+import org.apache.hc.client5.http.classic.methods.HttpPost;
 import java.io.IOException;
 import java.net.MalformedURLException;
 import java.net.URI;

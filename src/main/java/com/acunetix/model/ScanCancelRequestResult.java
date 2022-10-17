@@ -1,6 +1,6 @@
 package com.acunetix.model;
 
-import org.apache.http.HttpResponse;
+import org.apache.hc.core5.http.HttpResponse;
 import org.json.simple.parser.ParseException;
 
 import java.io.IOException;
@@ -30,7 +30,7 @@ public class ScanCancelRequestResult extends ScanRequestBase {
 
     public ScanCancelRequestResult(final HttpResponse response) throws MalformedURLException, URISyntaxException {
         super();
-        httpStatusCode = response.getStatusLine().getStatusCode();
+        httpStatusCode = response.getCode();
         isError = httpStatusCode != 200;
 
         if (!isError) {

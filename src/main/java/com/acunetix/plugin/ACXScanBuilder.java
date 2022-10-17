@@ -27,7 +27,7 @@ import com.acunetix.model.WebsiteProfileModel;
 import com.acunetix.utility.AppCommon;
 
 import org.apache.commons.lang.StringUtils;
-import org.apache.http.HttpResponse;
+import org.apache.hc.core5.http.HttpResponse;
 import org.jenkinsci.Symbol;
 import org.json.simple.parser.ParseException;
 import org.kohsuke.stapler.AncestorInPath;
@@ -318,7 +318,7 @@ public class ACXScanBuilder extends Builder implements SimpleBuildStep {
 
         logInfo("Requesting scan...", listener);
         HttpResponse scanRequestResponse = scanRequest.scanRequest();
-        logInfo("Response status code: " + scanRequestResponse.getStatusLine().getStatusCode(),
+        logInfo("Response status code: " + scanRequestResponse.getCode(),
                 listener);
 
         ScanRequestResult scanRequestResult =
@@ -357,7 +357,7 @@ public class ACXScanBuilder extends Builder implements SimpleBuildStep {
                 logInfo("Requesting scan info...", listener);
                 HttpResponse scanInfoRequestResponse = scanInfoRequest.scanInfoRequest();
                 logInfo("Response scan info status code: "
-                        + scanInfoRequestResponse.getStatusLine().getStatusCode(), listener);
+                        + scanInfoRequestResponse.getCode(), listener);
 
                 ScanInfoRequestResult scanInfoRequestResult = new ScanInfoRequestResult(scanInfoRequestResponse);
 
@@ -425,7 +425,7 @@ public class ACXScanBuilder extends Builder implements SimpleBuildStep {
         logInfo("Requesting scan cancel...", listener);
         HttpResponse scanCancelRequestResponse = scanCancelRequest.scanCancelRequest();
         logInfo("Response scan cancel status code: "
-                + scanCancelRequestResponse.getStatusLine().getStatusCode(), listener);
+                + scanCancelRequestResponse.getCode(), listener);
 
         ScanCancelRequestResult scanCancelRequestResult = new ScanCancelRequestResult(scanCancelRequestResponse);
 
@@ -571,7 +571,7 @@ public class ACXScanBuilder extends Builder implements SimpleBuildStep {
             model.add("Incremental", "Incremental");
             model.add("Full (With primary profile)", "FullWithPrimaryProfile");
             model.add("Full (With selected profile)", "FullWithSelectedProfile");
-
+            model.get(1).selected = true;
             return model;
         }
 
@@ -587,6 +587,7 @@ public class ACXScanBuilder extends Builder implements SimpleBuildStep {
             for (WebsiteModel websiteModel : websiteModels) {
                 model.add(websiteModel.getDisplayName(), websiteModel.getId());
             }
+            model.get(1).selected = true;
 
             return model;
         }
@@ -607,10 +608,11 @@ public class ACXScanBuilder extends Builder implements SimpleBuildStep {
             if (websiteProfileModels.isEmpty()) {
                 placeholderText = "-- No profile found --";
                 model.add(placeholderText, "");
-            }
-
-            for (WebsiteProfileModel websiteProfileModel : websiteProfileModels) {
-                model.add(websiteProfileModel.getName(), websiteProfileModel.getId());
+            }else {
+                for (WebsiteProfileModel websiteProfileModel : websiteProfileModels) {
+                    model.add(websiteProfileModel.getName(), websiteProfileModel.getId());
+                }
+                model.get(1).selected = true;
             }
 
             return model;
@@ -630,6 +632,7 @@ public class ACXScanBuilder extends Builder implements SimpleBuildStep {
             model.add("PCI DSS Compliance","PCICompliance");  
             model.add("SANS Top 25", "SansTop25");     
             model.add("WASC Threat Classification","WASC");
+            model.get(1).selected = true;
             return model;
         }
 
@@ -638,7 +641,7 @@ public class ACXScanBuilder extends Builder implements SimpleBuildStep {
             WebsiteModelRequest websiteModelRequest =
                     new WebsiteModelRequest(acxServerURL, ncApiToken);
             final HttpResponse response = websiteModelRequest.getPluginWebSiteModels();
-            int statusCode = response.getStatusLine().getStatusCode();
+            int statusCode = response.getCode();
 
             if (statusCode == 200) {
                 websiteModels = new ArrayList<>();

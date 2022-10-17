@@ -3,10 +3,10 @@ package com.acunetix.model;
 import com.acunetix.utility.AppCommon;
 import hudson.util.Secret;
 
-import org.apache.http.HttpHeaders;
-import org.apache.http.HttpResponse;
-import org.apache.http.client.HttpClient;
-import org.apache.http.client.methods.HttpGet;
+import org.apache.hc.core5.http.HttpHeaders;
+import org.apache.hc.core5.http.HttpResponse;
+import org.apache.hc.client5.http.classic.HttpClient;
+import org.apache.hc.client5.http.classic.methods.HttpGet;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
@@ -42,7 +42,7 @@ public class WebsiteModelRequest extends ScanRequestBase {
 		httpGet.setHeader(HttpHeaders.AUTHORIZATION, getAuthHeader());
 
 		response = httpClient.execute(httpGet);
-		if (response.getStatusLine().getStatusCode() == 200) {
+		if (response.getCode() == 200) {
 			parseWebsiteData();
 		}
 		return response;
