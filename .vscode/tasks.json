@@ -30,7 +30,7 @@
       "label": "mvnDebug",
       "type": "shell",
       "dependsOn": ["mvnClean"],
-      "command": "mvnDebug hpi:run -D jenkins.version=2.371",
+      "command": "mvnDebug hpi:run -D jenkins.version=2.357",
       "isBackground": true,
       "problemMatcher": [
         {
