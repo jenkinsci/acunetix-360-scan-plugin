@@ -1,12 +1,13 @@
 package com.acunetix.plugin;
 
 import java.io.IOException;
+import java.io.PrintWriter;
+import java.io.StringWriter;
 import java.net.MalformedURLException;
 import java.net.URISyntaxException;
 import java.util.ArrayList;
 import java.util.HashMap;
 
-import javax.annotation.CheckForNull;
 import com.cloudbees.plugins.credentials.CredentialsProvider;
 import com.cloudbees.plugins.credentials.common.StandardListBoxModel;
 import com.cloudbees.plugins.credentials.common.StandardUsernamePasswordCredentials;
@@ -27,7 +28,7 @@ import com.acunetix.model.WebsiteProfileModel;
 import com.acunetix.utility.AppCommon;
 
 import org.apache.commons.lang.StringUtils;
-import org.apache.hc.core5.http.HttpResponse;
+import org.apache.hc.core5.http.ClassicHttpResponse;
 import org.jenkinsci.Symbol;
 import org.json.simple.parser.ParseException;
 import org.kohsuke.stapler.AncestorInPath;
@@ -42,7 +43,6 @@ import hudson.FilePath;
 import hudson.Launcher;
 import hudson.model.AbstractProject;
 import hudson.model.Item;
-import hudson.model.Result;
 import hudson.model.ParameterValue;
 import hudson.model.ParametersAction;
 import hudson.model.Run;
@@ -52,7 +52,6 @@ import hudson.tasks.Builder;
 import hudson.util.FormValidation;
 import hudson.util.ListBoxModel;
 import hudson.util.Secret;
-import hudson.util.ListBoxModel.Option;
 import jenkins.model.Jenkins;
 import jenkins.tasks.SimpleBuildStep;
 import net.sf.json.JSONObject;
@@ -317,7 +316,7 @@ public class ACXScanBuilder extends Builder implements SimpleBuildStep {
                 ncProfileId, commit);
 
         logInfo("Requesting scan...", listener);
-        HttpResponse scanRequestResponse = scanRequest.scanRequest();
+        ClassicHttpResponse scanRequestResponse = scanRequest.scanRequest();
         logInfo("Response status code: " + scanRequestResponse.getCode(),
                 listener);
 
@@ -355,7 +354,7 @@ public class ACXScanBuilder extends Builder implements SimpleBuildStep {
                         new ScanInfoRequest(acxServerURL, ncApiToken, scanTaskId, ncDoNotFail, ncConfirmed, ncFilters);
 
                 logInfo("Requesting scan info...", listener);
-                HttpResponse scanInfoRequestResponse = scanInfoRequest.scanInfoRequest();
+                ClassicHttpResponse scanInfoRequestResponse = scanInfoRequest.scanInfoRequest();
                 logInfo("Response scan info status code: "
                         + scanInfoRequestResponse.getCode(), listener);
 
@@ -401,7 +400,9 @@ public class ACXScanBuilder extends Builder implements SimpleBuildStep {
             }
             throw new hudson.AbortException("The build was aborted");
         } catch (Exception e) {
-            logInfo(e.getMessage(), listener);
+            StringWriter errors = new StringWriter();
+            e.printStackTrace(new PrintWriter(errors));
+            logInfo(errors.toString(), listener);
             throw new hudson.AbortException("The build was aborted");
         }
     }
@@ -423,7 +424,7 @@ public class ACXScanBuilder extends Builder implements SimpleBuildStep {
         ScanCancelRequest scanCancelRequest = new ScanCancelRequest(acxServerURL, ncApiToken, scanTaskId);
 
         logInfo("Requesting scan cancel...", listener);
-        HttpResponse scanCancelRequestResponse = scanCancelRequest.scanCancelRequest();
+        ClassicHttpResponse scanCancelRequestResponse = scanCancelRequest.scanCancelRequest();
         logInfo("Response scan cancel status code: "
                 + scanCancelRequestResponse.getCode(), listener);
 
@@ -640,7 +641,7 @@ public class ACXScanBuilder extends Builder implements SimpleBuildStep {
                 throws IOException, URISyntaxException, ParseException {
             WebsiteModelRequest websiteModelRequest =
                     new WebsiteModelRequest(acxServerURL, ncApiToken);
-            final HttpResponse response = websiteModelRequest.getPluginWebSiteModels();
+            final ClassicHttpResponse response = websiteModelRequest.getPluginWebSiteModels();
             int statusCode = response.getCode();
 
             if (statusCode == 200) {

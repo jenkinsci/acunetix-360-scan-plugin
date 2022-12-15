@@ -2,7 +2,7 @@ package com.acunetix.model;
 
 import com.google.gson.Gson;
 import com.acunetix.utility.AppCommon;
-import org.apache.hc.core5.http.HttpResponse;
+import org.apache.hc.core5.http.ClassicHttpResponse;
 import org.json.simple.parser.ParseException;
 
 import java.io.IOException;
@@ -33,7 +33,7 @@ public class ScanInfoRequestResult extends ScanRequestBase {
         data = "";
     }
 
-    public ScanInfoRequestResult(final HttpResponse response) throws MalformedURLException, URISyntaxException {
+    public ScanInfoRequestResult(final ClassicHttpResponse response) throws MalformedURLException, URISyntaxException {
         super();
         httpStatusCode = response.getCode();
         isError = httpStatusCode != 200;

@@ -1,7 +1,7 @@
 package com.acunetix.model;
 
 import com.acunetix.utility.AppCommon;
-import org.apache.hc.core5.http.HttpResponse;
+import org.apache.hc.core5.http.ClassicHttpResponse;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
 import org.json.simple.parser.ParseException;
@@ -9,7 +9,7 @@ import org.json.simple.parser.ParseException;
 import java.io.IOException;
 
 public class ScanReport {
-    private final HttpResponse reportRequestResponse;
+    private final ClassicHttpResponse reportRequestResponse;
     private final boolean scanRequestHasError;
     private final String scanRequestErrorMessage;
     private final boolean reportRequestHasError;
@@ -17,7 +17,7 @@ public class ScanReport {
     private final String requestURI;
     private static String reportHtmlAsString = null;
 
-    public ScanReport(HttpResponse reportRequestResponse, String requestURI) {
+    public ScanReport(ClassicHttpResponse reportRequestResponse, String requestURI) {
         this.reportRequestResponse = reportRequestResponse;
         this.scanRequestHasError = false;
         this.scanRequestErrorMessage = "";

@@ -3,7 +3,7 @@ package com.acunetix.model;
 import com.acunetix.utility.AppCommon;
 import hudson.util.Secret;
 import org.apache.hc.core5.http.HttpHeaders;
-import org.apache.hc.core5.http.HttpResponse;
+import org.apache.hc.core5.http.ClassicHttpResponse;
 import org.apache.hc.client5.http.classic.HttpClient;
 import org.apache.hc.client5.http.classic.methods.HttpGet;
 import org.json.simple.parser.ParseException;
@@ -42,7 +42,7 @@ public class ScanRequestResult extends ScanRequestBase {
         data = "";
     }
 
-    public ScanRequestResult(HttpResponse response, String apiURL, Secret apiToken, String ncReportType)
+    public ScanRequestResult(ClassicHttpResponse response, String apiURL, Secret apiToken, String ncReportType)
             throws MalformedURLException, URISyntaxException {
         super(apiURL, apiToken);
         httpStatusCode = response.getCode();
@@ -150,7 +150,7 @@ public class ScanRequestResult extends ScanRequestBase {
                 final HttpGet httpGet = new HttpGet(scanReportEndpoint);
                 httpGet.setHeader(HttpHeaders.AUTHORIZATION, getAuthHeader());
 
-                HttpResponse response = httpClient.execute(httpGet);
+                ClassicHttpResponse response = (ClassicHttpResponse) httpClient.execute(httpGet);
 
                 reportFromApi = new ScanReport(response, scanReportEndpoint);
             } catch (IOException ex) {

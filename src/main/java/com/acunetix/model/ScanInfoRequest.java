@@ -2,14 +2,12 @@ package com.acunetix.model;
 
 import hudson.util.Secret;
 import org.apache.hc.core5.http.HttpHeaders;
-import org.apache.hc.core5.http.HttpResponse;
+import org.apache.hc.core5.http.ClassicHttpResponse;
 import org.apache.hc.client5.http.classic.HttpClient;
 import org.apache.hc.client5.http.classic.methods.HttpGet;
 import org.apache.hc.client5.http.classic.methods.HttpPost;
 import org.apache.hc.core5.http.ContentType;
 import org.apache.hc.core5.http.io.entity.StringEntity;
-import org.apache.hc.core5.http.io.entity.EntityUtils;
-
 import java.io.IOException;
 import java.net.MalformedURLException;
 import java.net.URI;
@@ -33,20 +31,18 @@ public class ScanInfoRequest extends ScanRequestBase {
     public final Boolean doNotFail;
     public final Boolean isConfirmed;
 
-    public HttpResponse scanInfoRequestOld() throws IOException {
+    public ClassicHttpResponse scanInfoRequestOld() throws IOException {
         HttpClient client = getHttpClient();
         final HttpGet httpGet = new HttpGet(scanInfoUri + scanTaskId);
         httpGet.setHeader("Accept", json);
         httpGet.setHeader(HttpHeaders.AUTHORIZATION, getAuthHeader());
 
-        HttpResponse response = client.execute(httpGet);
-
-        return response;
+        return (ClassicHttpResponse) client.execute(httpGet);
     }
 
-    public HttpResponse scanInfoRequest() throws IOException {
+    public ClassicHttpResponse scanInfoRequest() throws IOException {
         HttpClient httpClient = getHttpClient();
-        HttpResponse response = null;
+
         try {
             HttpPost request = new HttpPost(scanInfoUri);
 
@@ -65,10 +61,10 @@ public class ScanInfoRequest extends ScanRequestBase {
             request.setHeader("Content-Type", "application/json");
             request.setHeader(HttpHeaders.AUTHORIZATION, getAuthHeader());
 
-            response = httpClient.execute(request);
+            return (ClassicHttpResponse) httpClient.execute(request);
         }catch (Exception ex) {
             Exception e = ex;
         }
-        return response;
+        return null;
     }
 }

@@ -2,7 +2,7 @@ package com.acunetix.model;
 
 import hudson.util.Secret;
 import org.apache.hc.core5.http.HttpHeaders;
-import org.apache.hc.core5.http.HttpResponse;
+import org.apache.hc.core5.http.ClassicHttpResponse;
 import org.apache.hc.core5.http.NameValuePair;
 import org.apache.hc.client5.http.classic.HttpClient;
 import org.apache.hc.client5.http.entity.UrlEncodedFormEntity;
@@ -37,7 +37,7 @@ public class ScanRequest extends ScanRequestBase {
     public final URI scanUri;
     public final URI testUri;
 
-    public HttpResponse scanRequest() throws IOException {
+    public ClassicHttpResponse scanRequest() throws IOException {
         HttpClient client = getHttpClient();
         final HttpPost httpPost = new HttpPost(scanUri);
         httpPost.setHeader("Accept", json);
@@ -48,12 +48,10 @@ public class ScanRequest extends ScanRequestBase {
         vcsCommit.addVcsCommitInfo(params);
         httpPost.setEntity(new UrlEncodedFormEntity(params));
 
-        HttpResponse response = client.execute(httpPost);
-
-        return response;
+        return (ClassicHttpResponse) client.execute(httpPost);
     }
 
-    public HttpResponse testRequest() throws IOException {
+    public ClassicHttpResponse testRequest() throws IOException {
         HttpClient client = getHttpClient();
         final HttpPost httpPost = new HttpPost(testUri);
         httpPost.setHeader("Accept", json);
@@ -63,9 +61,7 @@ public class ScanRequest extends ScanRequestBase {
         setScanParams(params);
         httpPost.setEntity(new UrlEncodedFormEntity(params));
 
-        HttpResponse response = client.execute(httpPost);
-
-        return response;
+        return (ClassicHttpResponse) client.execute(httpPost);
     }
 
     private void setScanParams(List<NameValuePair> params) {

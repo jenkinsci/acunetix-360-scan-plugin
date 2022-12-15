@@ -2,7 +2,7 @@ package com.acunetix.model;
 
 import hudson.util.Secret;
 import org.apache.hc.core5.http.HttpHeaders;
-import org.apache.hc.core5.http.HttpResponse;
+import org.apache.hc.core5.http.ClassicHttpResponse;
 import org.apache.hc.client5.http.classic.HttpClient;
 import org.apache.hc.client5.http.classic.methods.HttpPost;
 import java.io.IOException;
@@ -21,14 +21,12 @@ public class ScanCancelRequest extends ScanRequestBase {
     public final String scanTaskId;
     public final URI scanCancelUri;
 
-    public HttpResponse scanCancelRequest() throws IOException {
+    public ClassicHttpResponse scanCancelRequest() throws IOException {
         HttpClient client = getHttpClient();
         final HttpPost httpPost = new HttpPost(scanCancelUri + scanTaskId);
         httpPost.setHeader("Accept", json);
         httpPost.setHeader(HttpHeaders.AUTHORIZATION, getAuthHeader());
 
-        HttpResponse response = client.execute(httpPost);
-
-        return response;
+        return (ClassicHttpResponse) client.execute(httpPost);
     }
 }

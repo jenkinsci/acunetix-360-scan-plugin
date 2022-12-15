@@ -3,8 +3,8 @@ package com.acunetix.model;
 import com.acunetix.utility.AppCommon;
 import hudson.util.Secret;
 
+import org.apache.hc.core5.http.ClassicHttpResponse;
 import org.apache.hc.core5.http.HttpHeaders;
-import org.apache.hc.core5.http.HttpResponse;
 import org.apache.hc.client5.http.classic.HttpClient;
 import org.apache.hc.client5.http.classic.methods.HttpGet;
 import org.json.simple.JSONArray;
@@ -21,7 +21,6 @@ import java.util.ArrayList;
 
 public class WebsiteModelRequest extends ScanRequestBase {
 	private ArrayList<WebsiteModel> websiteModels = new ArrayList<>();
-	private HttpResponse response;
 
 	public WebsiteModelRequest(String apiURL, Secret apiToken)
 			throws MalformedURLException, NullPointerException, URISyntaxException {
@@ -35,20 +34,20 @@ public class WebsiteModelRequest extends ScanRequestBase {
 		return websiteModels;
 	}
 
-	public HttpResponse getPluginWebSiteModels() throws IOException, ParseException {
+	public ClassicHttpResponse getPluginWebSiteModels() throws IOException, ParseException {
 		final HttpClient httpClient = getHttpClient();
 		final HttpGet httpGet = new HttpGet(pluginWebSiteModelsUri);
 		httpGet.setHeader("Accept", json);
 		httpGet.setHeader(HttpHeaders.AUTHORIZATION, getAuthHeader());
 
-		response = httpClient.execute(httpGet);
+		ClassicHttpResponse response = (ClassicHttpResponse) httpClient.execute(httpGet);
 		if (response.getCode() == 200) {
-			parseWebsiteData();
+			parseWebsiteData(response);
 		}
 		return response;
 	}
 
-	private void parseWebsiteData() throws ParseException, IOException {
+	private void parseWebsiteData(final ClassicHttpResponse response) throws ParseException, IOException {
 		String data = AppCommon.parseResponseToString(response);
 
 		JSONParser parser = new JSONParser();
