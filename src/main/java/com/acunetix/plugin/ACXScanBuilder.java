@@ -572,7 +572,7 @@ public class ACXScanBuilder extends Builder implements SimpleBuildStep {
             model.add("Incremental", "Incremental");
             model.add("Full (With primary profile)", "FullWithPrimaryProfile");
             model.add("Full (With selected profile)", "FullWithSelectedProfile");
-            model.get(1).selected = true;
+            
             return model;
         }
 
@@ -588,8 +588,7 @@ public class ACXScanBuilder extends Builder implements SimpleBuildStep {
             for (WebsiteModel websiteModel : websiteModels) {
                 model.add(websiteModel.getDisplayName(), websiteModel.getId());
             }
-            model.get(1).selected = true;
-
+                
             return model;
         }
 
@@ -613,7 +612,6 @@ public class ACXScanBuilder extends Builder implements SimpleBuildStep {
                 for (WebsiteProfileModel websiteProfileModel : websiteProfileModels) {
                     model.add(websiteProfileModel.getName(), websiteProfileModel.getId());
                 }
-                model.get(1).selected = true;
             }
 
             return model;
@@ -633,7 +631,7 @@ public class ACXScanBuilder extends Builder implements SimpleBuildStep {
             model.add("PCI DSS Compliance","PCICompliance");  
             model.add("SANS Top 25", "SansTop25");     
             model.add("WASC Threat Classification","WASC");
-            model.get(1).selected = true;
+            
             return model;
         }
 
