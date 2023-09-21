@@ -229,10 +229,12 @@ public class AppCommon {
 				deepestFolder = tempFolder;
 			}
 
-			for (int i = 1; i < folderNames.size(); i++) {
-				tempFolder = (Folder) tempFolder.getItem(folderNames.get(i));
-				if (tempFolder != null && CredentialsProvider.hasStores(tempFolder)) {
-					deepestFolder = tempFolder;
+			for (int i = 1; i < folderNames.size(); i++) {				
+				if(tempFolder != null) {
+					tempFolder = (Folder) tempFolder.getItem(folderNames.get(i));
+					if (tempFolder != null && CredentialsProvider.hasStores(tempFolder)) {
+						deepestFolder = tempFolder;
+					}
 				}
 			}
 		}
