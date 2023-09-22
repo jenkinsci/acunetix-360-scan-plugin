@@ -219,7 +219,7 @@
         <developerConnection>scm:git:ssh://git@github.com/jenkinsci/${project.artifactId}-plugin.git
         </developerConnection>
         <url>https://github.com/jenkinsci/acunetix-360-scan-plugin</url>
-        <tag>2.1.9</tag>
+        <tag>2.1.11</tag>
     </scm>
     <licenses>
         <license>
