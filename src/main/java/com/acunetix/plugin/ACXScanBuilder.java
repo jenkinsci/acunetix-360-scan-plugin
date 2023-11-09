@@ -52,6 +52,7 @@ import hudson.tasks.Builder;
 import hudson.util.FormValidation;
 import hudson.util.ListBoxModel;
 import hudson.util.Secret;
+import hudson.util.ListBoxModel.Option;
 import jenkins.model.Jenkins;
 import jenkins.tasks.SimpleBuildStep;
 import net.sf.json.JSONObject;
@@ -569,6 +570,7 @@ public class ACXScanBuilder extends Builder implements SimpleBuildStep {
         @SuppressWarnings("unused")
         public ListBoxModel doFillNcScanTypeItems() {
             ListBoxModel model = new ListBoxModel();
+            model.add("Please Select Scan Type", "");
             model.add("Incremental", "Incremental");
             model.add("Full (With primary profile)", "FullWithPrimaryProfile");
             model.add("Full (With selected profile)", "FullWithSelectedProfile");
@@ -584,7 +586,7 @@ public class ACXScanBuilder extends Builder implements SimpleBuildStep {
             }
 
             ListBoxModel model = new ListBoxModel();
-            
+            model.add("Please select website","");
             for (WebsiteModel websiteModel : websiteModels) {
                 model.add(websiteModel.getDisplayName(), websiteModel.getId());
             }
@@ -609,8 +611,10 @@ public class ACXScanBuilder extends Builder implements SimpleBuildStep {
                 placeholderText = "-- No profile found --";
                 model.add(placeholderText, "");
             }else {
+                model.add("Please Select Scan Profile","");
                 for (WebsiteProfileModel websiteProfileModel : websiteProfileModels) {
-                    model.add(websiteProfileModel.getName(), websiteProfileModel.getId());
+                    boolean isSelected =  websiteProfileModels != null && websiteProfileModels.size() == 1 ? true : false;
+                    model.add(new Option(websiteProfileModel.getName(), websiteProfileModel.getId(),isSelected));
                 }
             }
 
@@ -620,6 +624,7 @@ public class ACXScanBuilder extends Builder implements SimpleBuildStep {
         @SuppressWarnings("unused")
         public ListBoxModel doFillNcReportTypeItems() {
             ListBoxModel model = new ListBoxModel();
+            model.add("Please Select Report Type","");  
             model.add("Detailed Scan Report","ScanDetail");       
             model.add("Executive Summary","ExecutiveSummary"); 
             model.add("Full Scan Detail","FullScanDetail");
