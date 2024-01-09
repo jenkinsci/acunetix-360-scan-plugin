@@ -5,6 +5,7 @@ import hudson.util.Secret;
 import org.apache.commons.codec.binary.Base64;
 import org.apache.hc.client5.http.impl.classic.CloseableHttpClient;
 import org.apache.hc.client5.http.impl.classic.HttpClientBuilder;
+import org.apache.hc.client5.http.impl.classic.HttpClients;
 
 import java.net.MalformedURLException;
 import java.net.URL;
@@ -28,6 +29,10 @@ public abstract class ScanRequestBase {
 
     protected CloseableHttpClient getHttpClient() {
         return HttpClientBuilder.create().disableRedirectHandling().build();
+    }
+
+    protected CloseableHttpClient getDefaultHttpClient() {
+        return HttpClients.createDefault();
     }
 
     protected String getAuthHeader() {

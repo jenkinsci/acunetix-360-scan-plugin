@@ -73,6 +73,9 @@ public class ACXScanBuilder extends Builder implements SimpleBuildStep {
     private Boolean ncIgnoreRiskAccepted;
     private IgnoredVulnerabilityStateFilters ncFilters = new IgnoredVulnerabilityStateFilters();
     private String ncReportType;
+    private String ncScanTaskId;
+    private Boolean ncAbortScan;
+    private Boolean ncCancelEventFired;
 
     private final String apiTokenBuildParameterName = "APITOKEN";
 
@@ -220,6 +223,31 @@ public class ACXScanBuilder extends Builder implements SimpleBuildStep {
         this.ncReportType = ncReportType;
     }
 
+    public void setScanTaskId(String ncScanTaskId) {
+        this.ncScanTaskId = ncScanTaskId;
+    }
+
+    public String getScanTaskId() {
+        return ncScanTaskId;
+    }
+
+    public void setCancelState(Boolean ncCancelEventFired) {
+        this.ncCancelEventFired = ncCancelEventFired;
+    }
+
+    public Boolean getCancelState() {
+        return ncCancelEventFired;
+    }
+
+    @DataBoundSetter
+    public void setNcAbortScan(Boolean ncAbortScan) {
+       this.ncAbortScan = ncAbortScan;
+    }
+
+    public Boolean getNcAbortScan() {
+        return ncAbortScan;
+    }
+
     @Override
     public void perform(Run<?, ?> build, FilePath workspace, Launcher launcher,
             TaskListener listener) throws InterruptedException, IOException {
@@ -230,7 +258,30 @@ public class ACXScanBuilder extends Builder implements SimpleBuildStep {
 
         try {
             ScanRequestHandler(build, commit, listener);
-        } catch (Exception e) {
+        }
+        catch(hudson.AbortException e)
+        {
+            try{
+
+                DescriptorImpl descriptor = getDescriptor();
+                String ncServerURL = StringUtils.isBlank(getAcxServerURL()) ? descriptor.getAcxServerURL()
+                : getAcxServerURL();
+
+                Boolean cancelScanWhenUserAbortsOperation = getNcAbortScan();
+
+                if (cancelScanWhenUserAbortsOperation && !getCancelState()) {
+                     CancelScan(ncServerURL, ncApiToken, getScanTaskId() , listener);    
+                }
+                           
+            }
+            catch(Exception ex)
+            {
+                logInfo(ex.getMessage(), listener);
+            }
+            
+            logInfo(e.getMessage(), listener);
+        }  
+        catch (Exception e) {
             try {
                 build.replaceAction(new ACXScanResultAction(
                         ScanRequestResult.errorResult("Scan Request Failed:: " + e.getMessage())));
@@ -327,6 +378,8 @@ public class ACXScanBuilder extends Builder implements SimpleBuildStep {
 
         setFilters();
 
+        setScanTaskId(scanRequestResult.getScanTaskId());
+
         // HTTP status code 201 refers to created. This means our request added to
         // queue. Otherwise it is failed.
         if (scanRequestResult.getHttpStatusCode() == 201 && !scanRequestResult.isError()) {
@@ -396,14 +449,21 @@ public class ACXScanBuilder extends Builder implements SimpleBuildStep {
         } catch (hudson.AbortException e) {
             Boolean isCancel = (scanInfoConnectionError || ((ncStopScan != null && ncStopScan)
                 && (isSeverityBreaked || !scanAbortedExternally)));
+
             if (isCancel){
                 CancelScan(acxServerURL, ncApiToken, scanTaskId, listener);
+
+                setCancelState(true);
+            }
+            else{
+                 setCancelState(false);
             }
             throw new hudson.AbortException("The build was aborted");
         } catch (Exception e) {
             StringWriter errors = new StringWriter();
             e.printStackTrace(new PrintWriter(errors));
             logInfo(errors.toString(), listener);
+            setCancelState(false);
             throw new hudson.AbortException("The build was aborted");
         }
     }
