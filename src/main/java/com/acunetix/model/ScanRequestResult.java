@@ -42,9 +42,10 @@ public class ScanRequestResult extends ScanRequestBase {
         data = "";
     }
 
-    public ScanRequestResult(ClassicHttpResponse response, String apiURL, Secret apiToken, String ncReportType)
+    public ScanRequestResult(ClassicHttpResponse response, String apiURL, Secret apiToken, String ncReportType,
+        ProxyBlock proxy)
             throws MalformedURLException, URISyntaxException {
-        super(apiURL, apiToken);
+        super(apiURL, apiToken, proxy);
         httpStatusCode = response.getCode();
         isError = httpStatusCode != 201;
 
@@ -68,6 +69,7 @@ public class ScanRequestResult extends ScanRequestBase {
 
         String scanReportRelativeUrl = "api/1.0/scans/report/";
         URI scanReportEndpointUri = new URL(ApiURL, scanReportRelativeUrl).toURI();
+
         Map<String, String> queryparams = new HashMap<>();
         String reportType = ncReportType == null || ncReportType.equals("null") ? "ExecutiveSummary" : ncReportType;
         queryparams.put("Type", reportType);

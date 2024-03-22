@@ -16,8 +16,8 @@ import java.net.URL;
 
 public class ScanInfoRequest extends ScanRequestBase {
     public ScanInfoRequest(String apiURL, Secret apiToken,String scanTaskId, Boolean doNotFail, Boolean isConfirmed, 
-    IgnoredVulnerabilityStateFilters filters) throws MalformedURLException, NullPointerException, URISyntaxException {
-        super(apiURL, apiToken);
+    IgnoredVulnerabilityStateFilters filters, ProxyBlock proxy) throws MalformedURLException, NullPointerException, URISyntaxException {
+        super(apiURL, apiToken, proxy);
         this.scanTaskId = scanTaskId;
         this.scanInfoUri = new URL(ApiURL, "api/1.0/scans/ScanInfoForPlugin/").toURI();
         this.filters = filters;

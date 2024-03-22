@@ -25,6 +25,7 @@ import com.acunetix.model.VCSCommit;
 import com.acunetix.model.WebsiteModel;
 import com.acunetix.model.WebsiteModelRequest;
 import com.acunetix.model.WebsiteProfileModel;
+import com.acunetix.model.ProxyBlock;
 import com.acunetix.utility.AppCommon;
 
 import org.apache.commons.lang.StringUtils;
@@ -62,7 +63,7 @@ public class ACXScanBuilder extends Builder implements SimpleBuildStep {
     private String ncScanType;
     private String ncWebsiteId;
     private String ncProfileId;
-    private Secret ncApiToken;
+    private Secret acxApiToken;
     private String acxServerURL;
     private String credentialsId;
     private String ncSeverity;
@@ -76,6 +77,11 @@ public class ACXScanBuilder extends Builder implements SimpleBuildStep {
     private String ncScanTaskId;
     private Boolean ncAbortScan;
     private Boolean ncCancelEventFired;
+    private Boolean useProxy;
+    private String pHost;
+    private String pPort;
+    private String pUser;
+    private String pPassword;
 
     private final String apiTokenBuildParameterName = "APITOKEN";
 
@@ -114,7 +120,7 @@ public class ACXScanBuilder extends Builder implements SimpleBuildStep {
     public String getCredentialsId() {
         return credentialsId;
     }
-
+    
     public IgnoredVulnerabilityStateFilters getFilters(){
         return ncFilters;
     }
@@ -179,20 +185,20 @@ public class ACXScanBuilder extends Builder implements SimpleBuildStep {
         this.acxServerURL = acxServerURL;
     }
 
-    public Secret getNcApiToken() {
-        if (ncApiToken == null) {
-            ncApiToken = getDescriptor().getNcApiToken();
+    public Secret getAcxApiToken() {
+        if (acxApiToken == null) {
+            acxApiToken = getDescriptor().getAcxApiToken();
         }
-        return ncApiToken;
+        return acxApiToken;
     }
 
     @DataBoundSetter
-    public void setNcApiToken(Object ncApiToken) {
-        if (ncApiToken.getClass() == String.class) {
-            this.ncApiToken = Secret.fromString((String) ncApiToken);
+    public void setAcxApiToken(Object acxApiToken) {
+        if (acxApiToken.getClass() == String.class) {
+            this.acxApiToken = Secret.fromString((String) acxApiToken);
         }
-        if (ncApiToken.getClass() == Secret.class) {
-            this.ncApiToken = (Secret) ncApiToken;
+        if (acxApiToken.getClass() == Secret.class) {
+            this.acxApiToken = (Secret) acxApiToken;
         }
     }
 
@@ -248,6 +254,51 @@ public class ACXScanBuilder extends Builder implements SimpleBuildStep {
         return ncAbortScan;
     }
 
+    @DataBoundSetter
+    public void setUseProxy(Boolean useProxy) {
+        this.useProxy = useProxy;
+    }
+
+    public Boolean getUseProxy() {
+        return useProxy;
+    }
+
+    @DataBoundSetter
+    public void setpHost(String pHost) {
+        this.pHost = pHost;
+    }
+
+    public String getpHost() {
+        return pHost;
+    }
+
+    @DataBoundSetter
+    public void setpPort(String pPort) {
+        this.pPort = pPort;
+    }
+
+    public String getpPort() {
+        return pPort;
+    }
+
+    @DataBoundSetter
+    public void setpUser(String pUser) {
+        this.pUser = pUser;
+    }
+
+    public String getpUser() {
+        return pUser;
+    }
+
+    @DataBoundSetter
+    public void setpPassword(String pPassword) {
+        this.pPassword = pPassword;
+    }
+
+    public String getpPassword() {
+        return pPassword;
+    }
+
     @Override
     public void perform(Run<?, ?> build, FilePath workspace, Launcher launcher,
             TaskListener listener) throws InterruptedException, IOException {
@@ -261,18 +312,46 @@ public class ACXScanBuilder extends Builder implements SimpleBuildStep {
         }
         catch(hudson.AbortException e)
         {
-            try{
+            try {
 
                 DescriptorImpl descriptor = getDescriptor();
-                String ncServerURL = StringUtils.isBlank(getAcxServerURL()) ? descriptor.getAcxServerURL()
-                : getAcxServerURL();
+                
+                String acxServerURL = StringUtils.isBlank(getAcxServerURL()) ? descriptor.getAcxServerURL()
+                    : getAcxServerURL();
+
+                Secret acxApiToken = getAcxApiToken() == null ? descriptor.getAcxApiToken()
+                    : getAcxApiToken();
+
+                ProxyBlock proxy = null;
+                String pHost = null;
+                String pPort = null;
+                String pUser = null;
+                String pPassword = null;
+                
+                Boolean useProxy = getUseProxy() == null ? descriptor.getUseProxy()
+                        : getUseProxy();
+
+                if (useProxy) {
+                    pHost = StringUtils.isBlank(getpHost()) ? descriptor.getpHost()
+                        : getpHost();
+                
+                    pPort = StringUtils.isBlank(getpPort()) ? descriptor.getpPort()
+                            : getpPort();
+                
+                    pUser = StringUtils.isBlank(getpUser()) ? descriptor.getpUser()
+                            : getpUser();
+                
+                    pPassword = StringUtils.isBlank(getpPassword()) ? descriptor.getpPassword()
+                        : getpPassword();
+
+                    proxy = new ProxyBlock(useProxy, pHost, pPort, pUser, pPassword);
+                }
 
                 Boolean cancelScanWhenUserAbortsOperation = getNcAbortScan();
 
                 if (cancelScanWhenUserAbortsOperation && !getCancelState()) {
-                     CancelScan(ncServerURL, ncApiToken, getScanTaskId() , listener);    
+                     CancelScan(acxServerURL, acxApiToken, proxy, getScanTaskId() , listener);    
                 }
-                           
             }
             catch(Exception ex)
             {
@@ -321,11 +400,37 @@ public class ACXScanBuilder extends Builder implements SimpleBuildStep {
 
     private void ScanRequestHandler(Run<?, ?> build, VCSCommit commit, TaskListener listener)
             throws Exception {
+
         DescriptorImpl descriptor = getDescriptor();
         String acxServerURL = StringUtils.isBlank(getAcxServerURL()) ? descriptor.getAcxServerURL()
                 : getAcxServerURL();
 
-        Secret ncApiToken = null;
+        Secret acxApiToken = null;
+
+        ProxyBlock proxy = null;
+        String pHost = null;
+        String pPort = null;
+        String pUser = null;
+        String pPassword = null;
+
+        Boolean useProxy = getUseProxy() == null ? descriptor.getUseProxy()
+                : getUseProxy();
+        
+        if (useProxy) {
+            pHost = StringUtils.isBlank(getpHost()) ? descriptor.getpHost()
+                : getpHost();
+        
+            pPort = StringUtils.isBlank(getpPort()) ? descriptor.getpPort()
+                    : getpPort();
+
+            pUser = StringUtils.isBlank(getpUser()) ? descriptor.getpUser()
+                    : getpUser();
+
+            pPassword = StringUtils.isBlank(getpPassword()) ? descriptor.getpPassword()
+                : getpPassword();
+            
+            proxy = new ProxyBlock(useProxy, pHost, pPort, pUser, pPassword);
+        }
 
         // jenkin's server url
         String rootUrl = null;
@@ -339,21 +444,21 @@ public class ACXScanBuilder extends Builder implements SimpleBuildStep {
 
             if (credential != null) {
                 acxServerURL = credential.getUsername();
-                ncApiToken = credential.getPassword();
+                acxApiToken = credential.getPassword();
             }
         }
 
         // if token is not set, try to get from global variable or selected credential
         // from settings
-        if (ncApiToken == null || ncApiToken.getPlainText().isEmpty()) {
-            ncApiToken =
-                    getNcApiToken() != null && StringUtils.isBlank(getNcApiToken().getPlainText())
-                            ? descriptor.getNcApiToken()
-                            : getNcApiToken();
+        if (acxApiToken == null || acxApiToken.getPlainText().isEmpty()) {
+            acxApiToken =
+                    getAcxApiToken() != null && StringUtils.isBlank(getAcxApiToken().getPlainText())
+                            ? descriptor.getAcxApiToken()
+                            : getAcxApiToken();
 
 
-            if (Secret.toString(ncApiToken) == ("$" + apiTokenBuildParameterName)) {
-                ncApiToken = GetApiTokenFromBuildParameters(build);
+            if (Secret.toString(acxApiToken) == ("$" + apiTokenBuildParameterName)) {
+                acxApiToken = GetApiTokenFromBuildParameters(build);
             }
         }
 
@@ -364,8 +469,8 @@ public class ACXScanBuilder extends Builder implements SimpleBuildStep {
 
         commit.setRootURL(rootUrl);
 
-        ScanRequest scanRequest = new ScanRequest(acxServerURL, ncApiToken, ncScanType, ncWebsiteId,
-                ncProfileId, commit);
+        ScanRequest scanRequest = new ScanRequest(acxServerURL, acxApiToken, ncScanType, ncWebsiteId,
+                ncProfileId, commit, proxy);
 
         logInfo("Requesting scan...", listener);
         ClassicHttpResponse scanRequestResponse = scanRequest.scanRequest();
@@ -373,7 +478,8 @@ public class ACXScanBuilder extends Builder implements SimpleBuildStep {
                 listener);
 
         ScanRequestResult scanRequestResult =
-                new ScanRequestResult(scanRequestResponse, acxServerURL, ncApiToken, ncReportType);
+                new ScanRequestResult(scanRequestResponse, acxServerURL, acxApiToken, ncReportType,
+                 proxy);
         build.replaceAction(new ACXScanResultAction(scanRequestResult));
 
         setFilters();
@@ -383,15 +489,15 @@ public class ACXScanBuilder extends Builder implements SimpleBuildStep {
         // HTTP status code 201 refers to created. This means our request added to
         // queue. Otherwise it is failed.
         if (scanRequestResult.getHttpStatusCode() == 201 && !scanRequestResult.isError()) {
-            ScanRequestSuccessHandler(acxServerURL, ncApiToken, scanRequestResult,
-                    scanRequestResult.getScanTaskId(), ncDoNotFail, ncConfirmed, 
-                    ncFilters, listener);
+            ScanRequestSuccessHandler(acxServerURL, acxApiToken, proxy,
+                     scanRequestResult, scanRequestResult.getScanTaskId(), ncDoNotFail, ncConfirmed, 
+                     ncFilters, listener);
         } else {
             ScanRequestFailureHandler(scanRequestResult, listener);
         }
     }
 
-    private void ScanRequestSuccessHandler(String acxServerURL, Secret ncApiToken,
+    private void ScanRequestSuccessHandler(String acxServerURL, Secret acxApiToken, ProxyBlock proxy,
             ScanRequestResult scanRequestResult, String scanTaskId, Boolean doNotFail, Boolean isConfirmed, 
             IgnoredVulnerabilityStateFilters filters, TaskListener listener)
             throws IOException, URISyntaxException, InterruptedException {
@@ -405,7 +511,7 @@ public class ACXScanBuilder extends Builder implements SimpleBuildStep {
         try {
             while (!scanStatus.equals(ScanTaskState.Complete)) {
                 ScanInfoRequest scanInfoRequest =
-                        new ScanInfoRequest(acxServerURL, ncApiToken, scanTaskId, ncDoNotFail, ncConfirmed, ncFilters);
+                        new ScanInfoRequest(acxServerURL, acxApiToken, scanTaskId, ncDoNotFail, ncConfirmed, ncFilters, proxy);
 
                 logInfo("Requesting scan info...", listener);
                 ClassicHttpResponse scanInfoRequestResponse = scanInfoRequest.scanInfoRequest();
@@ -449,15 +555,14 @@ public class ACXScanBuilder extends Builder implements SimpleBuildStep {
         } catch (hudson.AbortException e) {
             Boolean isCancel = (scanInfoConnectionError || ((ncStopScan != null && ncStopScan)
                 && (isSeverityBreaked || !scanAbortedExternally)));
-
             if (isCancel){
-                CancelScan(acxServerURL, ncApiToken, scanTaskId, listener);
-
-                setCancelState(true);
-            }
-            else{
-                 setCancelState(false);
-            }
+                    CancelScan(acxServerURL, acxApiToken, proxy, scanTaskId, listener);
+    
+                    setCancelState(true);
+                }
+                else{
+                     setCancelState(false);
+                }
             throw new hudson.AbortException("The build was aborted");
         } catch (Exception e) {
             StringWriter errors = new StringWriter();
@@ -479,10 +584,11 @@ public class ACXScanBuilder extends Builder implements SimpleBuildStep {
         return options;
     }
 
-    private void CancelScan(String acxServerURL, Secret ncApiToken, String scanTaskId,
-            TaskListener listener)
+    private void CancelScan(String acxServerURL, Secret acxApiToken, ProxyBlock proxy,
+            String scanTaskId, TaskListener listener)
             throws IOException, MalformedURLException, NullPointerException, URISyntaxException {
-        ScanCancelRequest scanCancelRequest = new ScanCancelRequest(acxServerURL, ncApiToken, scanTaskId);
+
+        ScanCancelRequest scanCancelRequest = new ScanCancelRequest(acxServerURL, acxApiToken, scanTaskId, proxy);
 
         logInfo("Requesting scan cancel...", listener);
         ClassicHttpResponse scanCancelRequestResponse = scanCancelRequest.scanCancelRequest();
@@ -528,8 +634,13 @@ public class ACXScanBuilder extends Builder implements SimpleBuildStep {
         private ArrayList<WebsiteModel> websiteModels = new ArrayList<>();
 
         private String acxServerURL;
-        private Secret ncApiToken;
+        private Secret acxApiToken;
         private String rootURL;
+        private Boolean useProxy;
+        private String pHost;
+        private String pPort;
+        private String pUser;
+        private String pPassword;
 
         public DescriptorImpl() {
             super(ACXScanBuilder.class);
@@ -544,16 +655,57 @@ public class ACXScanBuilder extends Builder implements SimpleBuildStep {
             this.acxServerURL = acxServerURL;
         }
 
-        public Secret getNcApiToken() {
-            return ncApiToken;
+
+        public Secret getAcxApiToken() {
+            return acxApiToken;
         }
 
-        public void setNcApiToken(String ncApiToken) {
-            this.ncApiToken = Secret.fromString(ncApiToken);
+        public void setAcxApiToken(String acxApiToken) {
+            this.acxApiToken = Secret.fromString(acxApiToken);
         }
 
         public String getRootURL() {
             return rootURL;
+        }
+
+        public Boolean getUseProxy() {
+            return useProxy;
+        }
+
+        public void setUseProxy(Boolean useProxy) {
+            this.useProxy = useProxy;
+        }
+
+        public String getpHost() {
+            return pHost;
+        }
+
+        public void setpHost(String pHost) {
+            this.pHost = pHost;
+        }
+
+        public String getpPort() {
+            return pPort;
+        }
+
+        public void setpPort(String pPort) {
+            this.pPort = pPort;
+        }
+
+        public String getpUser() {
+            return pUser;
+        }
+
+        public void setpUser(String pUser) {
+            this.pUser = pUser;
+        }
+
+        public String getpPassword() {
+            return pPassword;
+        }
+
+        public void setpPassword(String pPassword) {
+            this.pPassword = pPassword;
         }
 
         @Override
@@ -572,7 +724,12 @@ public class ACXScanBuilder extends Builder implements SimpleBuildStep {
         public boolean configure(StaplerRequest req, JSONObject formData) throws FormException {
             req.bindParameters(this);
             this.acxServerURL = formData.getString("acxServerURL");
-            this.ncApiToken = Secret.fromString(formData.getString("ncApiToken"));
+            this.acxApiToken = Secret.fromString(formData.getString("acxApiToken"));
+            this.useProxy = formData.getBoolean("useProxy");
+            this.pHost = formData.getString("pHost");
+            this.pPort = formData.getString("pPort");
+            this.pUser = formData.getString("pUser");
+            this.pPassword = formData.getString("pPassword");
             this.rootURL = Jenkins.get().getRootUrl();
 
             // To persist global configuration information, set properties and call save().
@@ -582,8 +739,13 @@ public class ACXScanBuilder extends Builder implements SimpleBuildStep {
 
         @Override
         public String getConfigPage() {
+            ProxyBlock proxy = null;
+            if (useProxy) {
+                proxy = new ProxyBlock(useProxy, pHost, pPort, pUser, pPassword);
+            }
+
             try {
-                updateWebsiteModels(acxServerURL, ncApiToken);
+                updateWebsiteModels(acxServerURL, acxApiToken, proxy);
             } catch (Exception e) {
             }
 
@@ -640,6 +802,7 @@ public class ACXScanBuilder extends Builder implements SimpleBuildStep {
 
         @SuppressWarnings("unused")
         public ListBoxModel doFillNcWebsiteIdItems(@QueryParameter String credentialsId) {
+      
 
             if (!StringUtils.isEmpty(credentialsId)) {
                 doTestConnection(credentialsId);
@@ -657,6 +820,7 @@ public class ACXScanBuilder extends Builder implements SimpleBuildStep {
         @SuppressWarnings("unused")
         public ListBoxModel doFillNcProfileIdItems(@QueryParameter String ncWebsiteId) {
             WebsiteModel websiteModel = new WebsiteModel();
+            
             for (WebsiteModel wm : websiteModels) {
                 if (ncWebsiteId != null && wm.getId().equals(ncWebsiteId)) {
                     websiteModel = wm;
@@ -667,10 +831,11 @@ public class ACXScanBuilder extends Builder implements SimpleBuildStep {
             String placeholderText;
             final ArrayList<WebsiteProfileModel> websiteProfileModels = websiteModel.getProfiles();
             ListBoxModel model = new ListBoxModel();
+            
             if (websiteProfileModels.isEmpty()) {
                 placeholderText = "-- No profile found --";
                 model.add(placeholderText, "");
-            }else {
+            } else {
                 model.add("Please Select Scan Profile","");
                 for (WebsiteProfileModel websiteProfileModel : websiteProfileModels) {
                     boolean isSelected =  websiteProfileModels.size() == 1 ? true : false;
@@ -700,10 +865,10 @@ public class ACXScanBuilder extends Builder implements SimpleBuildStep {
             return model;
         }
 
-        private int updateWebsiteModels(final String acxServerURL, final Secret ncApiToken)
-                throws IOException, URISyntaxException, ParseException {
+        private int updateWebsiteModels(final String acxServerURL, final Secret acxApiToken,
+         ProxyBlock proxy) throws IOException, URISyntaxException, ParseException {
             WebsiteModelRequest websiteModelRequest =
-                    new WebsiteModelRequest(acxServerURL, ncApiToken);
+                    new WebsiteModelRequest(acxServerURL, acxApiToken, proxy);
             final ClassicHttpResponse response = websiteModelRequest.getPluginWebSiteModels();
             int statusCode = response.getCode();
 
@@ -717,10 +882,11 @@ public class ACXScanBuilder extends Builder implements SimpleBuildStep {
             return statusCode;
         }
 
-        private FormValidation validateConnection(final String acxServerURL,
-                final Secret ncApiToken) {
+        private FormValidation validateConnection(final String acxServerURL, final Secret acxApiToken,
+         final ProxyBlock proxy) {
+    
             try {
-                int statusCode = updateWebsiteModels(acxServerURL, ncApiToken);
+                int statusCode = updateWebsiteModels(acxServerURL, acxApiToken, proxy);
                 if (statusCode == 200) {
                     return FormValidation
                             .ok("Successfully connected to the Acunetix 360.");
@@ -737,18 +903,27 @@ public class ACXScanBuilder extends Builder implements SimpleBuildStep {
 
         @POST
         @SuppressWarnings("unused")
-        public FormValidation doValidateAPI(@QueryParameter final String acxServerURL,
-                @QueryParameter final Secret ncApiToken) {
-
+        public FormValidation doValidateAPI(@QueryParameter final String acxServerURL, @QueryParameter final Secret acxApiToken,
+                        @QueryParameter final Boolean useProxy, 
+                        @QueryParameter final String pHost, 
+                        @QueryParameter final String pPort,
+                        @QueryParameter final String pUser,
+                        @QueryParameter final String pPassword) {
             Jenkins.get().checkPermission(Jenkins.ADMINISTER);
+            
+            ProxyBlock proxy = null;
+            if (useProxy) {
+                proxy = new ProxyBlock(useProxy, pHost, pPort, pUser, pPassword);
+            }
 
-            return validateConnection(acxServerURL, ncApiToken);
+            return validateConnection(acxServerURL, acxApiToken, proxy);
         }
 
         @SuppressWarnings("unused")
         public FormValidation doTestConnection(@QueryParameter final String credentialsId) {
-
+           
             final String errorTemplate = "Error: %s";
+            
             try {
 
                 String descriptorUrl = getCurrentDescriptorByNameUrl();
@@ -763,7 +938,12 @@ public class ACXScanBuilder extends Builder implements SimpleBuildStep {
                 String serverURL = credential.getUsername();
                 Secret apiToken = credential.getPassword();
 
-                return validateConnection(serverURL, apiToken);
+                ProxyBlock proxy = null;
+                if (this.useProxy) {
+                    proxy = new ProxyBlock(this.useProxy, this.pHost, this.pPort, this.pUser, this.pPassword);
+                } 
+
+                return validateConnection(serverURL, apiToken, proxy);
 
             } catch (Exception e) {
                 return FormValidation.error(e, errorTemplate, e.getMessage());
@@ -785,7 +965,7 @@ public class ACXScanBuilder extends Builder implements SimpleBuildStep {
 
         @POST
         @SuppressWarnings("unused")
-        public FormValidation doCheckNcApiToken(@QueryParameter String value) {
+        public FormValidation doCheckAcxApiToken(@QueryParameter String value) {
             if (value.length() == 0) {
                 return FormValidation
                         .error(Messages.ACXScanBuilder_DescriptorImpl_errors_missingApiToken());

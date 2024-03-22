@@ -16,8 +16,9 @@ import org.apache.hc.core5.http.HttpEntity;
 import org.apache.hc.core5.http.ContentType;
 
 public class ScanCancelRequest extends ScanRequestBase {
-    public ScanCancelRequest(String apiURL, Secret apiToken,String scanTaskId) throws MalformedURLException, NullPointerException, URISyntaxException {
-        super(apiURL, apiToken);
+    public ScanCancelRequest(String apiURL, Secret apiToken, String scanTaskId,
+     ProxyBlock proxy) throws MalformedURLException, NullPointerException, URISyntaxException {
+        super(apiURL, apiToken, proxy);
         this.scanTaskId = scanTaskId;
         this.scanCancelUri = new URL(ApiURL, "api/1.0/scans/CancelScanForPlugin/").toURI();
         this.contentLength = "0";
@@ -30,7 +31,7 @@ public class ScanCancelRequest extends ScanRequestBase {
     public final String content;
 
     public ClassicHttpResponse scanCancelRequest() throws IOException {
-        CloseableHttpClient client = getDefaultHttpClient();
+        CloseableHttpClient client = getHttpClient();
         HttpPost httpPost = new HttpPost(scanCancelUri + scanTaskId);
         HttpEntity stringEntity = new StringEntity(content,ContentType.APPLICATION_JSON);
         httpPost.setEntity(stringEntity);

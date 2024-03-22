@@ -22,9 +22,9 @@ import java.util.ArrayList;
 public class WebsiteModelRequest extends ScanRequestBase {
 	private ArrayList<WebsiteModel> websiteModels = new ArrayList<>();
 
-	public WebsiteModelRequest(String apiURL, Secret apiToken)
-			throws MalformedURLException, NullPointerException, URISyntaxException {
-		super(apiURL, apiToken);
+	public WebsiteModelRequest(String apiURL, Secret apiToken,
+	  ProxyBlock proxy) throws MalformedURLException, NullPointerException, URISyntaxException {
+		super(apiURL, apiToken, proxy);
 		pluginWebSiteModelsUri = new URL(ApiURL, "api/1.0/scans/PluginWebSiteModels").toURI();
 	}
 

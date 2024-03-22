@@ -18,10 +18,10 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class ScanRequest extends ScanRequestBase {
-    public ScanRequest(String apiURL, Secret apiToken, String scanType, String websiteId,
-            String profileId, VCSCommit vcsCommit)
+    public ScanRequest(String apiURL, Secret apiToken, String scanType, String websiteId, String profileId, VCSCommit vcsCommit,
+            ProxyBlock proxy)
             throws MalformedURLException, NullPointerException, URISyntaxException {
-        super(apiURL, apiToken);
+        super(apiURL, apiToken, proxy);
         this.scanType = ScanType.valueOf(scanType);
         this.websiteId = websiteId;
         this.profileId = profileId;
