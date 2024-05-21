@@ -8,10 +8,10 @@
         <f:entry title="Acunetix 360 Server URL" field="acxServerURL" help="/plugin/acunetix-360-scan/help-acxserverurl.html">
             <f:textbox/>
         </f:entry>
-        <f:entry title="API Token" field="acxApiToken" help="/plugin/acunetix-360-scan/help-acxapitoken.html">
+        <f:entry title="API Token" field="ncApiToken" help="/plugin/acunetix-360-scan/help-ncapitoken.html">
             <f:password checkMethod="post"/>
         </f:entry>
-        <f:optionalBlock title="Connect using proxy" name="useProxy" inline="true" checked="${descriptor.useProxy}" help="/plugin/acunetix-360-scan/help-useproxy.html">
+        <f:optionalBlock title="Connect using proxy" name="useProxy" inline="true" checked="${descriptor.getUseProxy()}" help="/plugin/acunetix-360-scan/help-useproxy.html">
 		<f:entry title="Proxy Settings">
 			<table width="100%">
 				<f:entry title="Host" field="pHost" help="/plugin/acunetix-360-scan/help-phost.html">
@@ -31,7 +31,7 @@
 	    </f:optionalBlock>
         <f:validateButton
                 title="Test Connection" progress="Testing..."
-                method="validateAPI" with="acxServerURL,acxApiToken,useProxy,pHost,pPort,pUser,pPassword"/>
+                method="validateAPI" with="acxServerURL,ncApiToken,useProxy,pHost,pPort,pUser,pPassword"/>
         <script type="text/javascript">
             (function () {
             Q("input[name='_.acxServerURL']").attr('placeholder', "like 'https://online.acunetix360.com'");
