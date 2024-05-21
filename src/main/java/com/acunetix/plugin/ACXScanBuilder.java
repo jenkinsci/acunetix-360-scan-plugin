@@ -310,6 +310,10 @@ public class ACXScanBuilder extends Builder implements SimpleBuildStep {
         try {
             ScanRequestHandler(build, commit, listener);
         }
+        catch (RuntimeException e) {
+            logInfo(e.getMessage(), listener);
+            throw e; // Rethrow RuntimeException to handle it outside if necessary
+        }
         catch(hudson.AbortException e)
         {
             try {
@@ -375,6 +379,10 @@ public class ACXScanBuilder extends Builder implements SimpleBuildStep {
                 if (cancelScanWhenUserAbortsOperation && !getCancelState()) {
                      CancelScan(acxServerURL, ncApiToken, proxy, getScanTaskId() , listener);    
                 }
+            }
+            catch (RuntimeException ex) {
+                logInfo(ex.getMessage(), listener);
+                throw ex; // Rethrow RuntimeException to handle it outside if necessary
             }
             catch(Exception ex)
             {
