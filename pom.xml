@@ -1,10 +1,10 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
     <parent>
         <groupId>org.jenkins-ci.plugins</groupId>
         <artifactId>plugin</artifactId>
-        <version>4.47</version>
+        <version>4.75</version>
         <relativePath />
     </parent>
     <groupId>org.jenkins-ci.plugins</groupId>
@@ -13,13 +13,13 @@
     <packaging>hpi</packaging>
     <properties>
         <!-- Baseline Jenkins version you use to build the plugin. Users must have this version or newer to run. -->
-        <jenkins.version>2.357</jenkins.version>
+        <jenkins.version>2.462</jenkins.version>
         <!-- Other properties you may want to use:
           ~ java.level: set to 6 if your jenkins.version <= 1.611 ~ jenkins-test-harness.version: Jenkins Test Harness version you use to test the plugin. For Jenkins version >= 1.580.1 use JTH 2.0 or higher.
           ~ hpi-plugin.version: The HPI Maven Plugin version used by the plugin..
           ~ stapler-plugin.version: The Stapler Maven plugin version required by the plugin.
      -->
-        <java.level>8</java.level>
+        <java.level>17</java.level>
     </properties>
     <name>Acunetix 360 Scan Plugin</name>
     <description>Allows users to start security scans via Acunetix 360.</description>
@@ -29,10 +29,16 @@
                 <plugin>
                     <groupId>org.apache.maven.plugins</groupId>
                     <artifactId>maven-compiler-plugin</artifactId>
+                    <version>3.10.1</version>
                     <configuration>
-                        <source>3.10.1</source>
-                        <target>3.10.1</target>
+                        <source>${java.level}</source>
+                        <target>${java.level}</target>
                     </configuration>
+                </plugin>
+                <plugin>
+                    <groupId>org.jenkins-ci.tools</groupId>
+                    <artifactId>maven-hpi-plugin</artifactId>
+                    <version>3.51</version>
                 </plugin>
                 <!--
                 this plugin adds version info to manifest, it's used to get plugin version
@@ -75,10 +81,10 @@
             <artifactId>jakarta.mail-api</artifactId>
             <version>2.1.0</version>
         </dependency>
-        <dependency>	
-            <groupId>org.jenkins-ci</groupId>	
-            <artifactId>symbol-annotation</artifactId>	
-            <version>1.23</version>	
+        <dependency>
+            <groupId>org.jenkins-ci</groupId>
+            <artifactId>symbol-annotation</artifactId>
+            <version>1.23</version>
         </dependency>
         <dependency>
             <groupId>org.kohsuke.stapler</groupId>
@@ -92,14 +98,19 @@
             </exclusions>
         </dependency>
         <dependency>
+            <groupId>org.kohsuke.stapler</groupId>
+            <artifactId>json-lib</artifactId>
+            <version>2.4-jenkins-8</version>
+        </dependency>
+        <dependency>
             <groupId>org.jenkins-ci.plugins</groupId>
             <artifactId>credentials</artifactId>
-            <version>2.6.1.1</version>
+            <version>1254.vb_96f366e7b_a_d</version>
         </dependency>
         <dependency>
             <groupId>org.jenkins-ci.plugins</groupId>
             <artifactId>cloudbees-folder</artifactId>
-            <version>6.18</version>
+            <version>6.848.ve3b_fd7839a_81</version>
         </dependency>
         <dependency>
             <groupId>org.apache.httpcomponents.client5</groupId>
@@ -139,7 +150,7 @@
         <dependency>
             <groupId>org.jenkins-ci.plugins</groupId>
             <artifactId>structs</artifactId>
-            <version>1.24</version>
+            <version>324.va_f5d6774f3a_d</version>
         </dependency>
         <dependency>
             <groupId>org.jenkins-ci.plugins.workflow</groupId>
@@ -178,7 +189,7 @@
         <dependency>
             <groupId>org.jenkins-ci.plugins</groupId>
             <artifactId>command-launcher</artifactId>
-            <version>1.5</version>
+            <version>1.6</version>
         </dependency>
         <dependency>
             <groupId>org.ogce</groupId>
@@ -186,14 +197,25 @@
             <version>1.1.6</version>
         </dependency>
         <dependency>
+            <groupId>io.jenkins.plugins</groupId>
+            <artifactId>caffeine-api</artifactId>
+            <version>2.9.3-65.v6a_47d0f4d1fe</version>
+        </dependency>
+        <dependency>
             <groupId>org.jenkins-ci.plugins</groupId>
             <artifactId>role-strategy</artifactId>
             <version>3.2.0</version>
+            <exclusions>
+                <exclusion>
+                    <groupId>io.jenkins.plugins</groupId>
+                    <artifactId>caffeine-api</artifactId>
+                </exclusion>
+            </exclusions>
         </dependency>
         <dependency>
             <groupId>org.jenkins-ci.plugins</groupId>
             <artifactId>script-security</artifactId>
-            <version>1.78.1</version>
+            <version>1229.v4880b_b_e905a_6</version>
         </dependency>
         <dependency>
             <groupId>com.google.code.gson</groupId>
@@ -204,11 +226,19 @@
 
     <repositories>
         <repository>
+            <id>central</id>
+            <url>https://repo.maven.apache.org/maven2/</url>
+        </repository>
+        <repository>
             <id>repo.jenkins-ci.org</id>
             <url>https://repo.jenkins-ci.org/public/</url>
         </repository>
     </repositories>
     <pluginRepositories>
+        <pluginRepository>
+            <id>central</id>
+            <url>https://repo.maven.apache.org/maven2/</url>
+        </pluginRepository>
         <pluginRepository>
             <id>repo.jenkins-ci.org</id>
             <url>https://repo.jenkins-ci.org/public/</url>
@@ -219,7 +249,7 @@
         <developerConnection>scm:git:ssh://git@github.com/jenkinsci/${project.artifactId}-plugin.git
         </developerConnection>
         <url>https://github.com/jenkinsci/acunetix-360-scan-plugin</url>
-        <tag>2.1.16</tag>
+        <tag>acunetix-360-scan-2.1.17</tag>
     </scm>
     <licenses>
         <license>
