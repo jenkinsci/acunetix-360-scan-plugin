@@ -83,7 +83,7 @@ public class ACXScanBuilder extends Builder implements SimpleBuildStep {
     private String pUser;
     private String pPassword;
 
-    private final String apiTokenBuildParameterName = "APITOKEN";
+    private static final String apiTokenBuildParameterName = "APITOKEN";
 
     // Fields in config.jelly must match the parameter names in the
     // "DataBoundConstructor"
@@ -1044,19 +1044,6 @@ public class ACXScanBuilder extends Builder implements SimpleBuildStep {
             if (isRequired && !AppCommon.isGUIDValid(value)) {
                 return FormValidation
                         .error(Messages.ACXScanBuilder_DescriptorImpl_errors_invalidProfileId());
-            }
-
-            return FormValidation.ok();
-        }
-
-        @SuppressWarnings("unused")
-        public FormValidation doCheckNcReportType(@QueryParameter String value) {
-
-            try {
-                ReportType.valueOf(value);
-            } catch (Exception ex) {
-                return FormValidation
-                        .error(Messages.ACXScanBuilder_DescriptorImpl_errors_invalidReportType());
             }
 
             return FormValidation.ok();

@@ -6,6 +6,9 @@
 # Log file
 *.log
 
+# Ignore bin directory (generated build output, not needed in version control)
+bin/
+
 # BlueJ files
 *.ctxt
 
