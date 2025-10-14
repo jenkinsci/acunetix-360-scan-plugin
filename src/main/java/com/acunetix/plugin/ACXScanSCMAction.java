@@ -3,7 +3,7 @@ package com.acunetix.plugin;
 import com.acunetix.model.VCSCommit;
 import hudson.model.Action;
 
-import javax.annotation.CheckForNull;
+import edu.umd.cs.findbugs.annotations.CheckForNull;
 
 public class ACXScanSCMAction implements Action {
 

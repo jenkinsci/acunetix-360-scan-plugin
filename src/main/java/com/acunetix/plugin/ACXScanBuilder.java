@@ -675,6 +675,8 @@ public class ACXScanBuilder extends Builder implements SimpleBuildStep {
         public DescriptorImpl() {
             super(ACXScanBuilder.class);
             load();
+
+            java.util.logging.Logger.getLogger(DescriptorImpl.class.getName()).info("Netsparker Descriptor loaded");
         }
 
         public String getAcxServerURL() {
@@ -741,11 +743,13 @@ public class ACXScanBuilder extends Builder implements SimpleBuildStep {
         @Override
         public boolean isApplicable(Class<? extends AbstractProject> aClass) {
             // Indicates that this builder can be used with all kinds of project types
+            java.util.logging.Logger.getLogger(DescriptorImpl.class.getName()).info("NCScanBuilder descriptor isApplicable called");
             return true;
         }
 
         @Override
         public String getDisplayName() {
+            java.util.logging.Logger.getLogger(DescriptorImpl.class.getName()).info("NCScanBuilder getDisplayName called");
             return Messages.ACXScanBuilder_DescriptorImpl_DisplayName();
         }
 

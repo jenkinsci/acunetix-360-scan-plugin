@@ -2,8 +2,6 @@
 <j:jelly xmlns:j="jelly:core" xmlns:st="jelly:stapler" xmlns:d="jelly:define" xmlns:l="/lib/layout"
          xmlns:t="/lib/hudson" xmlns:f="/lib/form" xmlns:c="/lib/credentials">
     <st:adjunct includes="org.kohsuke.stapler.jquery"/>
-    <!-- avoid conflict with prototype.js in core -->
-    <script>var Q = jQuery.noConflict()</script>
     <script src="${rootURL}/plugin/acunetix-360-scan/scripts/arrive.js"/>
     <j:set var="editorId" value="${descriptor.createEditorId()}"/>
     <j:set var="ncResourceURL" value="${resURL}"/>
@@ -75,8 +73,8 @@
 
                 function toggleStopScanCheckBox(ncSeverityValue)
                 {
-                        var ncStopScanRow = Q('#ncStopScan-${editorId}').closest("tr");
-                        var stopScanCheckBox = Q('#ncStopScan-${editorId}');
+                        var ncStopScanRow = jQuery('#ncStopScan-${editorId}').closest(".jenkins-form-item");
+                        var stopScanCheckBox = jQuery('#ncStopScan-${editorId}');
 
                          if (ncSeverityValue == "DoNotFail") {
                             ncStopScanRow.css("opacity","0.5");
@@ -91,8 +89,8 @@
                 }
 
                 function toggleDoNotFailHiddenCheckBox(ncSeverityValue){
-                    var ncDoNotFailRow = Q('#ncDoNotFail-${editorId}').closest("tr");
-                    var doNotFailHiddenCheckBox = Q('#ncDoNotFail-${editorId}');
+                    var ncDoNotFailRow = jQuery('#ncDoNotFail-${editorId}').closest(".jenkins-form-item");
+                    var doNotFailHiddenCheckBox = jQuery('#ncDoNotFail-${editorId}');
                     console.log(ncSeverityValue);
                     if (ncSeverityValue == "DoNotFail") {
                         doNotFailHiddenCheckBox.prop("checked", true);
@@ -102,8 +100,8 @@
                 }
 
                 function toggleConfirmedCheckBox(ncSeverityValue){
-                    var ncConfirmedRow = Q('#ncConfirmed-${editorId}').closest("tr");
-                        var confirmedCheckBox = Q('#ncConfirmed-${editorId}');
+                    var ncConfirmedRow = jQuery('#ncConfirmed-${editorId}').closest(".jenkins-form-item");
+                        var confirmedCheckBox = jQuery('#ncConfirmed-${editorId}');
                          if (ncSeverityValue == "DoNotFail") {
                             ncConfirmedRow.css("opacity","0.5");
                             confirmedCheckBox.prop("checked", false);
@@ -115,8 +113,8 @@
                 }
 
                 function toggleIgnoreFalsePositiveCheckBox(ncSeverityValue){
-                    var ncIgnoreFalsePositiveRow = Q('#ncIgnoreFalsePositive-${editorId}').closest("tr");
-                    var ignoreFalsePositiveCheckBox = Q('#ncIgnoreFalsePositive-${editorId}');
+                    var ncIgnoreFalsePositiveRow = jQuery('#ncIgnoreFalsePositive-${editorId}').closest(".jenkins-form-item");
+                    var ignoreFalsePositiveCheckBox = jQuery('#ncIgnoreFalsePositive-${editorId}');
                     if (ncSeverityValue == "DoNotFail") {
                         ncIgnoreFalsePositiveRow.css("opacity","0.5");
                         ignoreFalsePositiveCheckBox.prop("checked", false);
@@ -128,8 +126,8 @@
                 }
 
                 function toggleIgnoreRiskAcceptedCheckBox(ncSeverityValue){
-                    var ncIgnoreRiskAcceptedRow = Q('#ncIgnoreRiskAccepted-${editorId}').closest("tr");
-                    var ignoreRiskAcceptedCheckBox = Q('#ncIgnoreRiskAccepted-${editorId}');
+                    var ncIgnoreRiskAcceptedRow = jQuery('#ncIgnoreRiskAccepted-${editorId}').closest(".jenkins-form-item");
+                    var ignoreRiskAcceptedCheckBox = jQuery('#ncIgnoreRiskAccepted-${editorId}');
                     if (ncSeverityValue == "DoNotFail") {
                         ncIgnoreRiskAcceptedRow.css("opacity","0.5");
                         ignoreRiskAcceptedCheckBox.prop("checked", false);
@@ -142,8 +140,8 @@
 
                 function toggleAbortScanCheckBox()
                 {
-                        var ncAbortScanRow = Q('#ncAbortScan-${editorId}').closest("tr");
-                        var abortScanCheckBox = Q('#ncAbortScan-${editorId}');
+                        var ncAbortScanRow = jQuery('#ncAbortScan-${editorId}').closest(".jenkins-form-item");
+                        var abortScanCheckBox = jQuery('#ncAbortScan-${editorId}');
 
                          ncAbortScanRow.css("opacity","1");
                          abortScanCheckBox.removeAttr("disabled");
@@ -151,8 +149,8 @@
 
                 function setStopScanVisibility() {
 
-                    Q('#ncSeverity-${editorId}').change(function () {
-                        var ncSeverityValue = Q('#ncSeverity-${editorId}').val();
+                    jQuery('#ncSeverity-${editorId}').change(function () {
+                        var ncSeverityValue = jQuery('#ncSeverity-${editorId}').val();
                         toggleStopScanCheckBox(ncSeverityValue);
                     })
                 };
@@ -164,41 +162,41 @@
 
                 function setDoNotFailVisibility() {
 
-                    Q('#ncSeverity-${editorId}').change(function () {
-                        var ncSeverityValue = Q('#ncSeverity-${editorId}').val();
+                    jQuery('#ncSeverity-${editorId}').change(function () {
+                        var ncSeverityValue = jQuery('#ncSeverity-${editorId}').val();
                         toggleDoNotFailHiddenCheckBox(ncSeverityValue);
                     })
                 };
 
                 function setConfirmedVisibility() {
 
-                    Q('#ncSeverity-${editorId}').change(function () {
-                        var ncSeverityValue = Q('#ncSeverity-${editorId}').val();
+                    jQuery('#ncSeverity-${editorId}').change(function () {
+                        var ncSeverityValue = jQuery('#ncSeverity-${editorId}').val();
                         toggleConfirmedCheckBox(ncSeverityValue);
                     })
                 };
 
                 function setIgnoreFalsePositiveVisibility() {
 
-                    Q('#ncSeverity-${editorId}').change(function () {
-                        var ncSeverityValue = Q('#ncSeverity-${editorId}').val();
+                    jQuery('#ncSeverity-${editorId}').change(function () {
+                        var ncSeverityValue = jQuery('#ncSeverity-${editorId}').val();
                         toggleIgnoreFalsePositiveCheckBox(ncSeverityValue);
                     })
                 };
 
                 function setIgnoreRiskAcceptedVisibility() {
 
-                    Q('#ncSeverity-${editorId}').change(function () {
-                        var ncSeverityValue = Q('#ncSeverity-${editorId}').val();
+                    jQuery('#ncSeverity-${editorId}').change(function () {
+                        var ncSeverityValue = jQuery('#ncSeverity-${editorId}').val();
                         toggleIgnoreRiskAcceptedCheckBox(ncSeverityValue);
                     })
                 };
 
                 function setProfileNameVisibility() {
-                    Q('#ncScanType-${editorId}').change(function () {
-                        var ncScanType = Q('#ncScanType-${editorId}');
+                    jQuery('#ncScanType-${editorId}').change(function () {
+                        var ncScanType = jQuery('#ncScanType-${editorId}');
                         var scanTypeValue = ncScanType.val();
-                        var ncProfileIdRow = Q('#ncProfileId-${editorId}').closest("tr");
+                        var ncProfileIdRow = jQuery('#ncProfileId-${editorId}').closest(".jenkins-form-item");
 
                         if (scanTypeValue == "FullWithPrimaryProfile") {
                             ncProfileIdRow.hide();
@@ -210,22 +208,22 @@
                             ncProfileIdRow.next().next().show();//help-text container
                         }
                     })
-                    Q('#ncWebsiteId-${editorId}').change();
-                    Q('#ncScanType-${editorId}').change();
+                    jQuery('#ncWebsiteId-${editorId}').change();
+                    jQuery('#ncScanType-${editorId}').change();
                 };
 
                 setProfileNameVisibility();
 
                 //function will be triggered when #ncScanType-${editorId} element created first time inside .jenkins-config
                 //Previous function will be used later requests.
-                Q(".jenkins-config").arrive("#ncScanType-${editorId}", function () {
+                jQuery(".jenkins-config").arrive("#ncScanType-${editorId}", function () {
                     // 'this' refers to the newly created element
                     setProfileNameVisibility();
-                    Q(".jenkins-config").unbindArrive("#ncScanType-${editorId}");
+                    jQuery(".jenkins-config").unbindArrive("#ncScanType-${editorId}");
                 });
 
-                Q(".jenkins-config").arrive("#ncReportType-${editorId}", function () {
-                    Q(".jenkins-config").unbindArrive("#ncReportType-${editorId}");
+                jQuery(".jenkins-config").arrive("#ncReportType-${editorId}", function () {
+                    jQuery(".jenkins-config").unbindArrive("#ncReportType-${editorId}");
                 });
 
                 setStopScanVisibility();
@@ -236,7 +234,7 @@
                 setAbortScanVisibility();
 
                //function will be triggered when #ncSeverity-${editorId} element created first time inside .jenkins-config
-                Q(".jenkins-config").arrive("#ncSeverity-${editorId}", function () {
+                jQuery(".jenkins-config").arrive("#ncSeverity-${editorId}", function () {
                     // 'this' refers to the newly created element
                     setStopScanVisibility();
                     setDoNotFailVisibility();
@@ -246,25 +244,25 @@
                     setAbortScanVisibility();
                     //default might be DotNotFail so check toogle, timeout used for element ready.
                     setTimeout(function(){
-                        toggleStopScanCheckBox(Q("#ncSeverity-${editorId}").val());
-                        toggleConfirmedCheckBox(Q("#ncSeverity-${editorId}").val());
-                        toggleIgnoreFalsePositiveCheckBox(Q("#ncSeverity-${editorId}").val());
-                        toggleIgnoreRiskAcceptedCheckBox(Q("#ncSeverity-${editorId}").val());
-                        toggleDoNotFailHiddenCheckBox(Q("#ncSeverity-${editorId}").val());
+                        toggleStopScanCheckBox(jQuery("#ncSeverity-${editorId}").val());
+                        toggleConfirmedCheckBox(jQuery("#ncSeverity-${editorId}").val());
+                        toggleIgnoreFalsePositiveCheckBox(jQuery("#ncSeverity-${editorId}").val());
+                        toggleIgnoreRiskAcceptedCheckBox(jQuery("#ncSeverity-${editorId}").val());
+                        toggleDoNotFailHiddenCheckBox(jQuery("#ncSeverity-${editorId}").val());
                         toggleAbortScanCheckBox();
                      }, 500);
 
-                    Q(".jenkins-config").unbindArrive("#ncSeverity-${editorId}");
+                    jQuery(".jenkins-config").unbindArrive("#ncSeverity-${editorId}");
                 });
 
                 
                 //editor arrive doesn't work on edit.
                 setTimeout(function(){
-                        toggleStopScanCheckBox(Q("#ncSeverity-${editorId}").val());
-                        toggleConfirmedCheckBox(Q("#ncSeverity-${editorId}").val());
-                        toggleIgnoreFalsePositiveCheckBox(Q("#ncSeverity-${editorId}").val());
-                        toggleIgnoreRiskAcceptedCheckBox(Q("#ncSeverity-${editorId}").val());
-                        toggleDoNotFailHiddenCheckBox(Q("#ncSeverity-${editorId}").val());
+                        toggleStopScanCheckBox(jQuery("#ncSeverity-${editorId}").val());
+                        toggleConfirmedCheckBox(jQuery("#ncSeverity-${editorId}").val());
+                        toggleIgnoreFalsePositiveCheckBox(jQuery("#ncSeverity-${editorId}").val());
+                        toggleIgnoreRiskAcceptedCheckBox(jQuery("#ncSeverity-${editorId}").val());
+                        toggleDoNotFailHiddenCheckBox(jQuery("#ncSeverity-${editorId}").val());
                         toggleAbortScanCheckBox();
                 }, 1000);
 

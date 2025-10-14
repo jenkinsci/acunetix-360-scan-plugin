@@ -8,7 +8,7 @@ import jenkins.model.RunAction2;
 import org.kohsuke.stapler.HttpResponse;
 import org.kohsuke.stapler.verb.GET;
 
-import javax.annotation.CheckForNull;
+import edu.umd.cs.findbugs.annotations.CheckForNull;
 
 public class ACXScanResultAction implements Action, RunAction2 {
 
