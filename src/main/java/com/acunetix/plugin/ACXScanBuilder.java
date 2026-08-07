@@ -28,7 +28,6 @@ import com.acunetix.model.WebsiteProfileModel;
 import com.acunetix.model.ProxyBlock;
 import com.acunetix.utility.AppCommon;
 
-import org.apache.commons.lang.StringUtils;
 import org.apache.hc.core5.http.ClassicHttpResponse;
 import org.jenkinsci.Symbol;
 import org.json.simple.parser.ParseException;
@@ -57,6 +56,7 @@ import hudson.util.ListBoxModel.Option;
 import jenkins.model.Jenkins;
 import jenkins.tasks.SimpleBuildStep;
 import net.sf.json.JSONObject;
+import hudson.Util;
 
 public class ACXScanBuilder extends Builder implements SimpleBuildStep {
 
@@ -320,10 +320,10 @@ public class ACXScanBuilder extends Builder implements SimpleBuildStep {
 
                 DescriptorImpl descriptor = getDescriptor();
                 
-                String acxServerURL = StringUtils.isBlank(getAcxServerURL()) ? descriptor.getAcxServerURL()
+                String acxServerURL = Util.fixEmptyAndTrim(getAcxServerURL()) == null ? descriptor.getAcxServerURL()
                     : getAcxServerURL();
 
-                if (!StringUtils.isEmpty(credentialsId)) {
+                if (Util.fixEmpty(credentialsId) != null) {
 
                     // build.getEnvironment().get("job_name")
                     // "Folder 1/Folder 1 - Folder 1/Folder 1 - Folder 1 - Folder 1/Child Project"
@@ -340,7 +340,7 @@ public class ACXScanBuilder extends Builder implements SimpleBuildStep {
                 // from settings
                 if (ncApiToken == null || ncApiToken.getPlainText().isEmpty()) {
                     ncApiToken =
-                            getNcApiToken() != null && StringUtils.isBlank(getNcApiToken().getPlainText())
+                            getNcApiToken() != null && Util.fixEmptyAndTrim(getNcApiToken().getPlainText()) == null
                                     ? descriptor.getNcApiToken()
                                     : getNcApiToken();
                 }
@@ -359,16 +359,16 @@ public class ACXScanBuilder extends Builder implements SimpleBuildStep {
                         : getUseProxy();
 
                 if (useProxy != null && useProxy) {
-                    pHost = StringUtils.isBlank(getpHost()) ? descriptor.getpHost()
+                    pHost = Util.fixEmptyAndTrim(getpHost()) == null ? descriptor.getpHost()
                         : getpHost();
                 
-                    pPort = StringUtils.isBlank(getpPort()) ? descriptor.getpPort()
+                    pPort = Util.fixEmptyAndTrim(getpPort()) == null ? descriptor.getpPort()
                             : getpPort();
                 
-                    pUser = StringUtils.isBlank(getpUser()) ? descriptor.getpUser()
+                    pUser = Util.fixEmptyAndTrim(getpUser()) == null ? descriptor.getpUser()
                             : getpUser();
                 
-                    pPassword = StringUtils.isBlank(getpPassword()) ? descriptor.getpPassword()
+                    pPassword = Util.fixEmptyAndTrim(getpPassword()) == null ? descriptor.getpPassword()
                         : getpPassword();
 
                     proxy = new ProxyBlock(useProxy, pHost, pPort, pUser, pPassword);
@@ -433,7 +433,7 @@ public class ACXScanBuilder extends Builder implements SimpleBuildStep {
             throws Exception {
 
         DescriptorImpl descriptor = getDescriptor();
-        String acxServerURL = StringUtils.isBlank(getAcxServerURL()) ? descriptor.getAcxServerURL()
+        String acxServerURL = Util.fixEmptyAndTrim(getAcxServerURL()) == null ? descriptor.getAcxServerURL()
                 : getAcxServerURL();
 
         Secret ncApiToken = null;
@@ -448,16 +448,16 @@ public class ACXScanBuilder extends Builder implements SimpleBuildStep {
                 : getUseProxy();
         
         if (useProxy != null && useProxy) {
-            pHost = StringUtils.isBlank(getpHost()) ? descriptor.getpHost()
+            pHost = Util.fixEmptyAndTrim(getpHost()) == null ? descriptor.getpHost()
                 : getpHost();
         
-            pPort = StringUtils.isBlank(getpPort()) ? descriptor.getpPort()
+            pPort = Util.fixEmptyAndTrim(getpPort()) == null ? descriptor.getpPort()
                     : getpPort();
 
-            pUser = StringUtils.isBlank(getpUser()) ? descriptor.getpUser()
+            pUser = Util.fixEmptyAndTrim(getpUser()) == null ? descriptor.getpUser()
                     : getpUser();
 
-            pPassword = StringUtils.isBlank(getpPassword()) ? descriptor.getpPassword()
+            pPassword = Util.fixEmptyAndTrim(getpPassword()) == null ? descriptor.getpPassword()
                 : getpPassword();
             
             proxy = new ProxyBlock(useProxy, pHost, pPort, pUser, pPassword);
@@ -466,7 +466,7 @@ public class ACXScanBuilder extends Builder implements SimpleBuildStep {
         // jenkin's server url
         String rootUrl = null;
 
-        if (!StringUtils.isEmpty(credentialsId)) {
+        if (Util.fixEmpty(credentialsId) != null) {
 
             // build.getEnvironment().get("job_name")
             // "Folder 1/Folder 1 - Folder 1/Folder 1 - Folder 1 - Folder 1/Child Project"
@@ -483,7 +483,7 @@ public class ACXScanBuilder extends Builder implements SimpleBuildStep {
         // from settings
         if (ncApiToken == null || ncApiToken.getPlainText().isEmpty()) {
             ncApiToken =
-                    getNcApiToken() != null && StringUtils.isBlank(getNcApiToken().getPlainText())
+                    getNcApiToken() != null && Util.fixEmptyAndTrim(getNcApiToken().getPlainText()) == null
                             ? descriptor.getNcApiToken()
                             : getNcApiToken();
         }
@@ -493,7 +493,7 @@ public class ACXScanBuilder extends Builder implements SimpleBuildStep {
         }
 
         // StringUtils.isEmpty checks null or empty
-        if (StringUtils.isEmpty(rootUrl)) {
+        if (Util.fixEmpty(rootUrl) == null) {
             rootUrl = descriptor.getRootURL();
         }
 
@@ -838,7 +838,7 @@ public class ACXScanBuilder extends Builder implements SimpleBuildStep {
         public ListBoxModel doFillNcWebsiteIdItems(@QueryParameter String credentialsId) {
       
 
-            if (!StringUtils.isEmpty(credentialsId)) {
+            if (Util.fixEmpty(credentialsId) != null) {
                 doTestConnection(credentialsId);
             }
 
